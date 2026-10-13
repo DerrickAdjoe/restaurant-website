@@ -173,4 +173,18 @@
 
 <aside class="drawer" id="drawer" aria-label="Your order">
   <div class="d-head"><h3>Your order</h3><button id="dClose" aria-label="Close order">×</button></div>
-  <div class="d-mode" role="radiogroup" aria-label="Order type"><button class="on" data-mode="Dine in">Dine in</button><button data-mode="Takeout">Takeout</button><
+  <div class="d-mode" role="radiogroup" aria-label="Order type"><button class="on" data-mode="Dine in">Dine in</button><button data-mode="Takeout">Takeout</button></div>
+  <div class="d-list" id="dList"></div>
+  <div class="d-foot">
+    <div class="d-tot"><span>Total</span><span id="dTot">GH₵ 0</span></div>
+    <textarea id="dNote" placeholder="Name, table number or pickup time (optional)"></textarea>
+    <a class="wa" id="waBtn" target="_blank" rel="noopener" aria-disabled="true">Send order on WhatsApp</a>
+    <span class="d-call">Prefer to call? <a href="tel:+233206423766">020 642 3766</a> or <a href="tel:+233544369707">054 436 9707</a></span>
+  </div>
+</aside>
+<button class="fab" id="fab" data-open-cart>Your order <span class="cart-count">0</span></button>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
