@@ -15,12 +15,8 @@ const IMG = {
   "hero": "assets/images/hero.jpg",
   "stripA": "assets/images/stripA.jpg",
   "stripB": "assets/images/stripB.jpg",
-  "g_red": "assets/images/g_red.jpg",
   "g_orange": "assets/images/g_orange.jpg",
   "g_white": "assets/images/g_white.jpg",
-  "g_cuc": "assets/images/g_cuc.jpg",
-  "g_straw": "assets/images/g_straw.jpg",
-  "g_mint": "assets/images/g_mint.jpg",
   "g_peach": "assets/images/g_peach.jpg",
   "g_clear": "assets/images/g_clear.jpg",
   "g_yellow": "assets/images/g_yellow.jpg",
@@ -37,16 +33,33 @@ const IMG = {
   "f_fries_wide": "assets/images/f_fries_wide.jpg",
   "b_mango": "assets/images/b_mango.webp",
   "b_range": "assets/images/b_range.webp",
-  "b_mellow": "assets/images/b_mellow.webp",
   "b_ginger": "assets/images/b_ginger.webp",
   "b_twist": "assets/images/b_twist.webp",
   "b_gold": "assets/images/b_gold.webp",
   "lime": "assets/images/lime.webp",
-  "strawberry1": "assets/images/strawberry1.webp",
-  "mint": "assets/images/mint.webp",
   "mint2": "assets/images/mint2.webp",
-  "ice": "assets/images/ice.webp",
-  "ice2": "assets/images/ice2.webp"
+  "d_peach_island": "assets/images/d_peach_island.jpg",
+  "d_berry_peach": "assets/images/d_berry_peach.jpg",
+  "d_sotb": "assets/images/d_sotb.jpg",
+  "d_blue_lagoon": "assets/images/d_blue_lagoon.jpg",
+  "d_tequila": "assets/images/d_tequila.jpg",
+  "d_margarita": "assets/images/d_margarita.jpg",
+  "d_cosmo": "assets/images/d_cosmo.jpg",
+  "d_passion": "assets/images/d_passion.jpg",
+  "d_emerald": "assets/images/d_emerald.jpg",
+  "d_twilight": "assets/images/d_twilight.jpg",
+  "d_supernova": "assets/images/d_supernova.jpg",
+  "d_hookup": "assets/images/d_hookup.jpg",
+  "d_mojito": "assets/images/d_mojito.jpg",
+  "d_tit": "assets/images/d_tit.jpg",
+  "d_emerald_m": "assets/images/d_emerald_m.jpg",
+  "f_wings": "assets/images/f_wings.jpg",
+  "s_wings": "assets/images/s_wings.jpg",
+  "s_wrap": "assets/images/s_wrap.jpg",
+  "s_juices": "assets/images/s_juices.jpg",
+  "d_bishop": "assets/images/d_bishop.jpg",
+  "d_capone": "assets/images/d_capone.jpg",
+  "d_guavana": "assets/images/d_guavana.jpg"
 };
 const $ = s => document.querySelector(s);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -56,14 +69,14 @@ $('#stripA').src = IMG.stripA; $('#stripB').src = IMG.stripB;
 
 /* ---------------- DATA (from the La Viva menu) ---------------- */
 const FOOD = [
-  {id:'jollof', name:'Gizzy Jollof', img:'f_jollof', tag:'Popular', cats:['popular','plates'], desc:'Jollof with gizzard chunks, plantain, protein, veggies, gizzard khebab', opts:[['M pack',50],['L pack',80]]},
-  {id:'bigdaddy', name:'Big Daddy Shawarma', img:'f_bigdaddy', tag:'Best seller', cats:['popular','shawarma'], desc:'Chicken, beef, veggies, cream / sauce, tortilla', opts:[['Medium',55],['Loaded',80]]},
+  {id:'jollof', name:'Gizzy Jollof', img:'f_jollof', story:"Welcome to your ultimate jollof rice destination. We don't just make jollof rice, we master it. Every single batch is cooked to order in a blazing hot wok, delivering that authentic, aromatic satisfaction for your taste buds with a lingering memory.", tag:'Popular', cats:['popular','plates'], desc:'Jollof with gizzard chunks, plantain, protein, veggies, gizzard khebab', opts:[['M pack',50],['L pack',80]]},
+  {id:'bigdaddy', name:'Big Daddy Shawarma', img:'f_bigdaddy', story:"Craving the perfect roll? Savor the bold flavor of slow-roasted, perfectly spiced shawarma wrapped in warm, fluffy pita. Juicy and tender chicken and beef bursting with flavor, tightly wrapped, creamy and spicy, made just for you.", tag:'Best seller', cats:['popular','shawarma'], desc:'Chicken, beef, veggies, cream / sauce, tortilla', opts:[['Medium',55],['Loaded',80]]},
   {id:'fries', name:'Loaded Fries', img:'f_fries_wide', tag:'Popular', cats:['popular','plates'], desc:'Crispy fries, melted cheese and sauce, protein, fresh veggies', opts:[['M pack',50],['L pack',80]]},
-  {id:'chshaw', name:'Chicken Shawarma', img:'f_chshaw', tag:'Wrap', cats:['shawarma'], desc:'Chicken, veggies, cream / sauce, tortilla', opts:[['Medium',50],['Loaded',65]]},
+  {id:'chshaw', name:'Chicken Shawarma', img:'f_chshaw', story:"Craving the perfect roll? Savor the bold flavor of slow-roasted, perfectly spiced shawarma wrapped in warm, fluffy pita. Juicy and tender chicken and beef bursting with flavor, tightly wrapped, creamy and spicy, made just for you.", tag:'Wrap', cats:['shawarma'], desc:'Chicken, veggies, cream / sauce, tortilla', opts:[['Medium',50],['Loaded',65]]},
   {id:'samosa', name:'Samosa', img:'f_samosa', tag:'Bites', cats:['shawarma','popular'], desc:'Samosa with black pepper sauce dip', opts:[['5 pieces',35],['8 pieces',45]]},
   {id:'crepes', name:'Crepes (Pancakes)', img:'f_crepes', tag:'Sweet', cats:['shawarma'], desc:'Pancakes, cream, filling, raisins, M&M / party sprinkles', opts:[['5 pieces',30],['8 pieces',45]], fill:['Strawberry sauce + cream','Blueberry sauce + cream']},
   {id:'salad', name:'Chicken Salad', img:'f_salad', tag:'Fresh', cats:['plates'], desc:'Fried chicken, veggies, mayonnaise, cream and mixed sauce', opts:[['M pack',40],['L pack',60]]},
-  {id:'wings', name:'Spicy Garlic Honey Wings / Thighs', img:null, tag:'Hot', cats:['plates','popular'], desc:'Crispy and juicy chicken wings or thighs, garlic honey sauce, spices', opts:[['Wings · 5 pcs',50],['Wings · 10 pcs',105],['Thighs · 5 pcs',55],['Thighs · 10 pcs',120]]},
+  {id:'wings', name:'Spicy Garlic Honey Wings / Thighs', img:'f_wings', story:"Meet your new obsession: Spicy Honey Garlic Wings. We take our extra-crispy, jumbo chicken wings and toss them in a sticky, addictive glaze made from pure local honey, roasted garlic, and a kick of fiery chili. It’s the perfect balance of sweet, savory, and heat that hits just right.", tag:'Hot', cats:['plates','popular'], desc:'Crispy and juicy chicken wings or thighs, garlic honey sauce, spices', opts:[['Wings · 5 pcs',50],['Wings · 10 pcs',105],['Thighs · 5 pcs',55],['Thighs · 10 pcs',120]]},
 ];
 const CATS = [
   {id:'popular', label:'Popular', img:'f_chshaw', color:'#C8102E'},
@@ -71,12 +84,11 @@ const CATS = [
   {id:'plates', label:'Daily plates', img:'f_jollof', color:'#A50E0E'},
 ];
 const JUICES = [
-  {name:['Mango','Smash'], ing:'Mango, Pineapple, Ginger', bottle:'b_mango', tint:'#ffb52e', price:25, main:'#FFAA00', bg:'#FFEFC6', deep:'#9A5A00', fruits:[['pineapple'],['orange'],['mint2'],['ice'],['lemon']], note:'Ripe mango and pineapple with a warm kick of fresh ginger.'},
-  {name:['Range','Lover'], ing:'Orange, Carrot, Apple, Pineapple', bottle:'b_range', tint:'#ff7a1a', price:25, main:'#F26A10', bg:'#FFE1C9', deep:'#9C3500', fruits:[['orange'],['ice'],['pineapple'],['orange'],['mint2']], note:'Bright orange and sweet carrot, rounded out with apple and pineapple.'},
-  {name:['Mellow','Mind'], ing:'Watermelon, Beetroot, Pineapple, Mint Leaves, Ginger', bottle:'b_mellow', tint:'#f0507e', price:20, main:'#D42A62', bg:'#FFD6E3', deep:'#7E0E36', fruits:[['strawberry1'],['mint2'],['ice'],['strawberry1'],['pineapple']], note:'Juicy watermelon and earthy beetroot, cooled down with mint.'},
-  {name:['Ginger','Pine'], ing:'Pineapple, Ginger', bottle:'b_ginger', tint:'#fff6d6', price:20, main:'#C2B200', bg:'#F7F2C4', deep:'#6B6100', fruits:[['pineapple'],['lemon'],['ice'],['mint2'],['pineapple']], note:'Just two ingredients: sweet pineapple and plenty of ginger.'},
-  {name:['Twist',''], ing:'Pineapple, Cucumber, Mint Leaves', bottle:'b_twist', tint:'#8fdc6a', price:20, main:'#2EA85A', bg:'#D5F3DE', deep:'#145F31', fruits:[['lime'],['mint2'],['ice'],['lime'],['pineapple']], note:'Crisp cucumber and pineapple with fresh mint. Light and very cold.'},
-  {name:['Liquid','Gold'], ing:'Orange, Pineapple, Mango, Passion Fruit, Lemon, Ginger', bottle:'b_gold', tint:'#ffc21a', price:27, main:'#E09A00', bg:'#FFF1C2', deep:'#7A4E00', fruits:[['orange'],['pineapple'],['ice'],['lemon'],['orange']], note:'Six fruits pressed together. Our most popular juice.'},
+  {name:['Range','Lover'], ing:'Orange, Carrot, Apple, Pineapple', bottle:'b_range', price:25, main:'#F26A10', bg:'#FFE1C9', deep:'#9C3500', fruits:[['orange'],['pineapple'],['orange'],['pineapple']]},
+  {name:['Mango','Smash'], ing:'Mango, Pineapple, Ginger', bottle:'b_mango', price:25, main:'#FFAA00', bg:'#FFEFC6', deep:'#9A5A00', fruits:[['pineapple'],['pineapple'],['pineapple']]},
+  {name:['Ginger','Pine'], ing:'Pineapple, Ginger', bottle:'b_ginger', price:20, main:'#C2B200', bg:'#F7F2C4', deep:'#6B6100', fruits:[['pineapple'],['pineapple'],['pineapple']]},
+  {name:['Twist',''], ing:'Pineapple, Cucumber, Mint Leaves', bottle:'b_twist', price:20, main:'#2EA85A', bg:'#D5F3DE', deep:'#145F31', fruits:[['pineapple'],['mint2'],['pineapple'],['mint2']]},
+  {name:['Liquid','Gold'], ing:'Orange, Pineapple, Mango, Passion Fruit, Lemon, Ginger', bottle:'b_gold', price:27, main:'#E09A00', bg:'#FFF1C2', deep:'#7A4E00', fruits:[['orange'],['pineapple'],['lemon'],['orange'],['pineapple'],['lemon']]},
 ];
 const DRINKS = {
   'Signature': {note:'Signature cocktails', items:[
@@ -119,28 +131,65 @@ const DRINKS = {
   ]},
 };
 const PHOTO = {
-  'Peach Island':['g_peach'], 'Passion Wave':['g_orange'], 'Emerald':['g_cuc','saturate(2.2) hue-rotate(18deg)'], 'Twilight':['g_straw','hue-rotate(-48deg) saturate(1.2)'],
-  'Supernova':['g_red'], 'Hookup':['g_yellow','hue-rotate(-14deg) saturate(1.2)'],
-  'Tropical Island Tea (TIT)':['g_peach','hue-rotate(12deg) saturate(1.1)'], 'Long Island Ice Tea':['g_orange','saturate(.85) brightness(.72) hue-rotate(-8deg)'],
-  'Hi-Life (AMF)':['g_yellow','hue-rotate(165deg) saturate(1.3)'], 'Bishop (Slushie)':['g_mint','hue-rotate(95deg) saturate(2.4)'], 'Capone (Slushie)':['g_straw'],
-  'Pina Colada':['g_white'], 'Sex on the Beach':['g_peach','hue-rotate(-14deg) saturate(1.3)'], 'Blue Lagoon':['g_yellow','hue-rotate(150deg) saturate(1.5) brightness(.95)'],
-  'Tequila Sunrise':['g_orange','saturate(1.2)'], 'Margarita':['g_cuc','hue-rotate(-22deg) saturate(1.4)'], 'Cosmopolitan':['g_straw','hue-rotate(-16deg) saturate(1.1)'],
-  'Virgin Mojito':['g_mint'], 'Tropical Twist':['g_peach','hue-rotate(-26deg) saturate(1.2)'], 'Emerald (Mocktail)':['g_cuc','saturate(2) hue-rotate(38deg)'],
-  'First Kiss':['g_mred','hue-rotate(14deg)'], 'Guavana':['g_straw','hue-rotate(8deg) saturate(.75) brightness(1.12)'], 'Berry & Peach':['g_mred','hue-rotate(6deg) saturate(1.1)'],
-  'Coco Mojito':['g_clear'], 'Classic Man':['g_mint'], 'Mojito Gold':['g_yellow'], 'Irish Tea':['g_orange','brightness(.8) saturate(.9)'], 'Mojito Melon':['g_mred','hue-rotate(-8deg) brightness(1.08)'],
+  'Peach Island':['d_peach_island'], 'Passion Wave':['d_passion'], 'Emerald':['d_emerald'], 'Twilight':['d_twilight'],
+  'Supernova':['d_supernova'], 'Hookup':['d_hookup'],
+  'Tropical Island Tea (TIT)':['d_tit'], 'Long Island Ice Tea':['g_orange','saturate(.85) brightness(.72) hue-rotate(-8deg)'],
+  'Hi-Life (AMF)':['g_yellow','hue-rotate(165deg) saturate(1.3)'], 'Bishop (Slushie)':['d_bishop'], 'Capone (Slushie)':['d_capone'],
+  'Pina Colada':['g_white'], 'Sex on the Beach':['d_sotb'], 'Blue Lagoon':['d_blue_lagoon'],
+  'Tequila Sunrise':['d_tequila'], 'Margarita':['d_margarita'], 'Cosmopolitan':['d_cosmo'],
+  'Virgin Mojito':['d_mojito'], 'Tropical Twist':['g_peach','hue-rotate(-26deg) saturate(1.2)'], 'Emerald (Mocktail)':['d_emerald_m'],
+  'First Kiss':['g_mred','hue-rotate(14deg)'], 'Guavana':['d_guavana'], 'Berry & Peach':['d_berry_peach'],
+  'Coco Mojito':['g_clear'], 'Classic Man':['d_mojito'], 'Mojito Gold':['g_yellow'], 'Irish Tea':['g_orange','brightness(.8) saturate(.9)'], 'Mojito Melon':['g_mred','hue-rotate(-8deg) brightness(1.08)'],
 };
 
 /* ---------------- HERO PHOTO ---------------- */
 document.querySelectorAll('[data-src]').forEach(i=>i.src=IMG[i.dataset.src]);
-const heroPhoto=$('#heroPhoto'); heroPhoto.src=IMG.hero;
+const SLIDES=[
+  {img:'d_peach_island', field:'Signature cocktails', type:'drink', group:'Signature', name:'Peach Island', rim:[.5,.46,.6], pos:'50% 50%'},
+  {img:'s_wrap', field:'Daily servings', type:'food', id:'chshaw', pos:'50% 50%'},
+  {img:'d_blue_lagoon', field:'Classic cocktails', type:'drink', group:'Classic', name:'Blue Lagoon', rim:[.51,.31,.28], pos:'50% 45%'},
+  {img:'s_juices', field:'Cold pressed juices', type:'juice', ji:1, pos:'50% 50%'},
+  {img:'s_wings', field:'Daily servings', type:'food', id:'wings', pos:'50% 45%'},
+  {img:'d_emerald_m', field:'Mocktails', type:'drink', group:'Mocktails', name:'Emerald (Mocktail)', label:'Emerald', rim:[.5,.43,.37], pos:'50% 50%'},
+  {img:'d_tit', field:'Special cocktails', type:'drink', group:'Special', name:'Tropical Island Tea (TIT)', pos:'50% 50%'},
+  {img:'hero', field:'Mojitos', type:'drink', group:'Mojitos', name:'Classic Man', rim:[.49,.37,.33], pos:'50% 50%'},
+];
+const slidesEl=$('#slides');
+slidesEl.innerHTML=SLIDES.map((s,i)=>`<img src="${IMG[s.img]}" alt="" style="object-position:${s.pos}" ${i?'loading="lazy"':''}>`).join('');
+const slideImgs=[...slidesEl.children];
+$('#capDots').innerHTML=SLIDES.map((s,i)=>`<button aria-label="Show ${s.field}" data-s="${i}"></button>`).join('');
+let si=-1, slideTimer;
+function slideInfo(s){
+  if (s.type==='drink'){ const d=DRINKS[s.group].items.find(x=>x[0]===s.name); return {name:s.label||d[0], price:ced(d[1])}; }
+  if (s.type==='food'){ const f=FOOD.find(x=>x.id===s.id); return {name:f.name, price:(f.opts.length>1?'from ':'')+ced(f.opts[0][1])}; }
+  const j=JUICES[s.ji]; return {name:j.name.join(' ').trim(), price:ced(j.price)};
+}
+function showSlide(i){
+  const n=(i+SLIDES.length)%SLIDES.length; if (n===si) return;
+  const old=slideImgs[si]; if (old){ old.classList.remove('on'); old.classList.add('prev'); setTimeout(()=>old.classList.remove('prev'),1400); }
+  si=n; slideImgs[si].classList.add('on');
+  const s=SLIDES[si], info=slideInfo(s), cap=$('#heroCap');
+  $('#capField').textContent=s.field; $('#capName').textContent=info.name; $('#capPrice').textContent=info.price;
+  cap.classList.remove('swap'); void cap.offsetWidth; cap.classList.add('swap');
+  document.querySelectorAll('#capDots button').forEach((b,k)=>b.classList.toggle('on',k===si));
+  parts=[]; setTimeout(sizeVapor,50);
+  clearTimeout(slideTimer); if(!reduce) slideTimer=setTimeout(()=>showSlide(si+1),6500);
+}
+document.querySelectorAll('#capDots button').forEach(b=>b.onclick=()=>showSlide(+b.dataset.s));
+$('#capOrder').onclick=()=>{ const s=SLIDES[si];
+  if (s.type==='drink'){ const d=DRINKS[s.group].items.find(x=>x[0]===s.name); openDrink({name:d[0],price:d[1],desc:d[2],a:d[3],b:d[4],group:s.group}); }
+  else if (s.type==='food') openFood(s.id);
+  else { $('#pressed').scrollIntoView({behavior:'smooth'}); setJuice(s.ji,true); } };
 /* ---------------- VAPOR (canvas) ---------------- */
 const cv = $('#vapor'), cx = cv.getContext('2d'); let parts=[], W=0, H=0, rim={x:0,y:0,w:0}, base={y:0,w:0};
 function sizeVapor(){
   const r = cv.getBoundingClientRect(), dpr=Math.min(devicePixelRatio||1,2);
   W=r.width; H=r.height; cv.width=W*dpr; cv.height=H*dpr; cx.setTransform(dpr,0,0,dpr,0,0);
-  const nw=heroPhoto.naturalWidth||920, nh=heroPhoto.naturalHeight||1119, sc=Math.max(W/nw,H/nh)*1.06, dw=nw*sc, dh=nh*sc, ox=(W-dw)/2, oy=(H-dh)/2;
-  rim = {x:ox+dw*.49, y:oy+dh*.37, w:dw*.33};
-  base = {x:ox+dw*.49, y:oy+dh*.9, w:dw*.5};
+  const s=SLIDES[si], im=slideImgs[si];
+  if (!s || !s.rim || !im.naturalWidth){ rim=null; return; }
+  const nw=im.naturalWidth, nh=im.naturalHeight, sc=Math.max(W/nw,H/nh)*1.06, dw=nw*sc, dh=nh*sc;
+  const [px,py]=s.pos.split(' ').map(v=>parseFloat(v)/100), ox=(W-dw)*px, oy=(H-dh)*py;
+  rim = {x:ox+dw*s.rim[0], y:oy+dh*s.rim[1], w:dw*s.rim[2]};
 }
 function spawn(kind){
   if (kind==='top') parts.push({x:rim.x+(Math.random()-.5)*rim.w*.85, y:rim.y+4, vx:(Math.random()-.5)*.35, vy:-(.35+Math.random()*.55), r:8+Math.random()*10, gr:.28+Math.random()*.25, life:0, max:150+Math.random()*90, a:.13+Math.random()*.1});
@@ -148,7 +197,7 @@ function spawn(kind){
 }
 function tickVapor(){
   cx.clearRect(0,0,W,H);
-  if (parts.length<90){ spawn('top'); if (Math.random()<.5) spawn('top'); if (Math.random()<.35) spawn('base'); }
+  if (parts.length<90 && rim){ spawn('top'); if (Math.random()<.5) spawn('top'); }
   for (let i=parts.length-1;i>=0;i--){
     const p=parts[i]; p.life++; p.x+=p.vx+Math.sin((p.life+p.y)/30)*.25; p.y+=p.vy; p.r+=p.gr; p.vx*=.995;
     const t=p.life/p.max, al = p.a * Math.min(1,W/900) * (t<.2 ? t/.2 : 1-(t-.2)/.8);
@@ -167,13 +216,14 @@ new IntersectionObserver(es=>{ heroVisible = es[0].isIntersecting; }).observe($(
 function loop(){
   if (heroVisible){
     tx += (-mx*18 - tx)*.05; ty += (-my*12 - ty)*.05;
-    heroPhoto.style.transform=`translate3d(${tx}px,${ty}px,0) scale(1.06)`;
+    slidesEl.style.transform=`translate3d(${tx}px,${ty}px,0) scale(1.06)`;
     tickVapor();
   }
   requestAnimationFrame(loop);
 }
 addEventListener('resize', sizeVapor);
-if (!reduce){ const go=()=>requestAnimationFrame(()=>{ sizeVapor(); loop(); }); heroPhoto.complete?go():heroPhoto.onload=go; }
+slideImgs.forEach(im=>im.addEventListener('load',sizeVapor));
+if (!reduce) requestAnimationFrame(loop);
 
 /* ---------------- Nav ---------------- */
 $('#menuToggle').onclick=()=>{ const ul=$('#navList'); const o=ul.classList.toggle('open'); $('#menuToggle').setAttribute('aria-expanded',o); };
@@ -203,7 +253,7 @@ document.querySelectorAll('.thumb').forEach(b=>b.onclick=()=>{ setJuice(+b.datas
 function paintJuice(j){
   pressed.style.setProperty('--main',j.main); pressed.style.setProperty('--bg',j.bg); pressed.style.setProperty('--deep',j.deep);
   const t=$('#ptitle'); t.classList.remove('go'); t.innerHTML=`<span><em>${j.name[0]}</em></span>${j.name[1]?`<span><em>${j.name[1]}</em></span>`:''}`; void t.offsetWidth; t.classList.add('go');
-  $('#pdesc').textContent=j.note; $('#pings').textContent=j.ing; $('#pprice').textContent=ced(j.price);
+  $('#pdesc').textContent=j.ing; $('#pings').textContent=''; $('#pprice').textContent=ced(j.price);
   // real fruit orbiting
   const n=j.fruits.length;
   $('#orbit').innerHTML = j.fruits.map((f,k)=>{ const key=f[0], m=FX[key]||[key,'none'];
@@ -253,7 +303,7 @@ function updAdd(){ const p = mItem.opts ? mItem.opts[mOpt][1] : mItem.price; $('
 function openFood(id){
   const f=FOOD.find(x=>x.id===id); mItem=f; mOpt=0; mFill=0; mQty=1;
   const v=$('#mVis'); v.className='m-vis'; v.innerHTML = f.img?`<img src="${IMG[f.img]}" alt="${f.name}">`:`<div class="ph typo" style="position:absolute;inset:0"><b style="font-size:44px">Wings &amp; thighs</b><span>Crispy, juicy and glazed in spicy garlic honey</span></div>`;
-  $('#mCat').textContent=CATS.find(c=>c.id===f.cats[0]).label; $('#mName').textContent=f.name; $('#mDesc').textContent=f.desc;
+  $('#mCat').textContent=CATS.find(c=>c.id===f.cats[0]).label; $('#mName').textContent=f.name; $('#mDesc').innerHTML=f.story?`${f.story}<span class="m-ing">What's inside: ${f.desc}</span>`:f.desc;
   $('#mOptsWrap').style.display=''; $('#mOptL').textContent = /pcs|pieces/i.test(f.opts[0][0])?'Choose an amount':'Choose a size';
   const draw=()=>{ $('#mOpts').innerHTML=f.opts.map((o,i)=>`<button class="opt ${i===mOpt?'on':''}" data-o="${i}"><b>${o[0]}</b><span>${ced(o[1])}</span></button>`).join('');
     document.querySelectorAll('#mOpts .opt').forEach(b=>b.onclick=()=>{mOpt=+b.dataset.o; draw(); updAdd();});
@@ -310,3 +360,4 @@ renderCart();
 const secs=['home','story','cravings','pressed','bar','contact'].map(id=>document.getElementById(id));
 const navIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ document.querySelectorAll('.nav a.lk').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)); } }),{rootMargin:'-45% 0px -50% 0px'});
 secs.forEach(s=>navIO.observe(s));
+showSlide(0);

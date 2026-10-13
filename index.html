@@ -29,10 +29,16 @@
     </ul>
     <button class="order-btn" data-open-cart>Your order <b class="cart-count">0</b></button>
   </nav>
-  <div class="stage" id="stage" aria-label="Iced mojitos on the La Viva bar: cucumber, strawberry and classic mint">
-    <img id="heroPhoto" class="hero-photo" alt="">
+  <div class="stage" id="stage" aria-roledescription="carousel" aria-label="Featured from our menu">
+    <div class="slides" id="slides"></div>
     <canvas class="vapor" id="vapor"></canvas>
     <div class="fade" aria-hidden="true"></div>
+    <div class="hero-cap" id="heroCap" aria-live="polite">
+      <small id="capField"></small>
+      <strong id="capName"></strong>
+      <div class="cap-row"><span id="capPrice"></span><button class="cap-btn" id="capOrder">Order</button></div>
+      <div class="cap-dots" id="capDots"></div>
+    </div>
   </div>
   <div class="hero-copy">
     <p class="eyebrow">La Viva Lounge</p>
@@ -55,7 +61,7 @@
 <section class="story" id="story">
   <div class="story-panel">
     <div class="srow">
-      <div class="stack" aria-hidden="true"><img data-src="g_peach" alt=""><img data-src="g_straw" alt=""><img data-src="g_orange" alt=""></div>
+      <div class="stack" aria-hidden="true"><img data-src="d_peach_island" alt=""><img data-src="d_blue_lagoon" alt=""><img data-src="d_emerald_m" alt=""></div>
       <div class="stext">
         <p class="eyebrow">Signature drinks</p>
         <h2>Cocktails crafted with passion</h2>
@@ -70,7 +76,7 @@
         <p>Gizzy jollof, loaded fries, Big Daddy shawarma and crispy samosas, ready for the table or for takeout.</p>
         <a class="btn btn-line" href="#cravings">Order food</a>
       </div>
-      <div class="stack" aria-hidden="true"><img data-src="f_fries" alt=""><img data-src="f_wrap_tall" alt=""><img data-src="f_jollof" alt=""></div>
+      <div class="stack" aria-hidden="true"><img data-src="f_wrap_tall" alt=""><img data-src="s_wings" alt=""><img data-src="f_fries" alt=""></div>
     </div>
   </div>
 </section>
@@ -88,8 +94,8 @@
 <!-- ============ COLD PRESSED ============ -->
 <section class="pressed" id="pressed">
   <div class="intro">
-    <h2 id="pressedHead">Cold pressed, never from concentrate</h2>
-    <p>Six blends pressed fresh every day. Pick one below or let them spin past.</p>
+    <div><p class="eyebrow">Pure. Raw and unfiltered.</p><h2 id="pressedHead">Cold pressed juices</h2></div>
+    <p>100% organic, cold-pressed juices packed with vitamins. No added sugar. No preservatives. Just pure liquid life.</p>
   </div>
   <div class="pcard" id="pcard">
     <svg class="blob" id="blob" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
@@ -104,7 +110,7 @@
     <div class="pbody">
       <div class="ptext">
         <svg class="leaf" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 3C10 3 5 8 5 15c0 1.3.3 2.5.7 3.5L3 21l1.4 1.4 2.7-2.8C8 20.5 9.4 21 11 21c7 0 10-7 9-18z"/></svg>
-        <h3 class="ptitle" id="ptitle"><span><em>Mango</em></span><span><em>Smash</em></span></h3>
+        <h3 class="ptitle" id="ptitle"><span><em>Range</em></span><span><em>Lover</em></span></h3>
         <p class="pdesc" id="pdesc"></p>
         <p class="pings" id="pings"></p>
         <div class="pbuy"><span class="pchip" id="pprice">GH₵ 25</span><button class="btn" id="padd">Add to order</button></div>
@@ -122,8 +128,8 @@
 <!-- ============ BAR ============ -->
 <section class="bar-sec" id="bar">
   <div class="sec-head">
-    <h2>The bar</h2>
-    <p>Signature drinks, specials and classics, mixed to order and served over plenty of ice.</p>
+    <div><p class="eyebrow">The bar</p><h2>Craft cocktails.<br>Unforgettable nights.</h2></div>
+    <p>We believe a great cocktail is more than just a drink: it’s an experience. Our mixologists blend classic techniques with bold, modern flavors using house-made syrups, fresh-squeezed citrus, and hand-selected spirits. Whether you are settling in for a quiet after-work glass or kicking off the weekend with friends, your glass is always in good hands.</p>
   </div>
   <div class="strip"><div class="ph"><img id="stripA" alt="Colourful cocktails with fruit garnishes"></div><div class="ph"><img id="stripB" alt="Mojitos with crushed ice and fresh mint"></div></div>
   <div class="tabs" id="tabs" role="tablist" aria-label="Drink lists"></div>
