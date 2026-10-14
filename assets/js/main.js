@@ -59,7 +59,17 @@ const IMG = {
   "s_juices": "assets/images/s_juices.jpg",
   "d_bishop": "assets/images/d_bishop.jpg",
   "d_capone": "assets/images/d_capone.jpg",
-  "d_guavana": "assets/images/d_guavana.jpg"
+  "d_guavana": "assets/images/d_guavana.jpg",
+  "i_orange": "assets/images/i_orange.svg",
+  "i_lemon": "assets/images/i_lemon.svg",
+  "i_cucumber": "assets/images/i_cucumber.svg",
+  "i_passion": "assets/images/i_passion.svg",
+  "i_apple": "assets/images/i_apple.svg",
+  "i_mango": "assets/images/i_mango.svg",
+  "i_carrot": "assets/images/i_carrot.svg",
+  "i_ginger": "assets/images/i_ginger.svg",
+  "i_mint": "assets/images/i_mint.svg",
+  "i_pineapple": "assets/images/i_pineapple.svg"
 };
 const $ = s => document.querySelector(s);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -84,11 +94,11 @@ const CATS = [
   {id:'plates', label:'Daily plates', img:'f_jollof', color:'#A50E0E'},
 ];
 const JUICES = [
-  {name:['Range','Lover'], ing:'Orange, Carrot, Apple, Pineapple', bottle:'b_range', price:25, main:'#F26A10', bg:'#FFE1C9', deep:'#9C3500', fruits:[['orange'],['pineapple'],['orange'],['pineapple']]},
-  {name:['Mango','Smash'], ing:'Mango, Pineapple, Ginger', bottle:'b_mango', price:25, main:'#FFAA00', bg:'#FFEFC6', deep:'#9A5A00', fruits:[['pineapple'],['pineapple'],['pineapple']]},
-  {name:['Ginger','Pine'], ing:'Pineapple, Ginger', bottle:'b_ginger', price:20, main:'#C2B200', bg:'#F7F2C4', deep:'#6B6100', fruits:[['pineapple'],['pineapple'],['pineapple']]},
-  {name:['Twist',''], ing:'Pineapple, Cucumber, Mint Leaves', bottle:'b_twist', price:20, main:'#2EA85A', bg:'#D5F3DE', deep:'#145F31', fruits:[['pineapple'],['mint2'],['pineapple'],['mint2']]},
-  {name:['Liquid','Gold'], ing:'Orange, Pineapple, Mango, Passion Fruit, Lemon, Ginger', bottle:'b_gold', price:27, main:'#E09A00', bg:'#FFF1C2', deep:'#7A4E00', fruits:[['orange'],['pineapple'],['lemon'],['orange'],['pineapple'],['lemon']]},
+  {name:['Range','Lover'], ing:'Orange, Carrot, Apple, Pineapple', bottle:'b_range', price:25, main:'#F26A10', bg:'#FFE1C9', deep:'#9C3500', fruits:[['i_orange'],['i_carrot'],['i_apple'],['i_pineapple']]},
+  {name:['Mango','Smash'], ing:'Mango, Pineapple, Ginger', bottle:'b_mango', price:25, main:'#FFAA00', bg:'#FFEFC6', deep:'#9A5A00', fruits:[['i_mango'],['i_pineapple'],['i_ginger'],['i_mango'],['i_pineapple'],['i_ginger']]},
+  {name:['Ginger','Pine'], ing:'Pineapple, Ginger', bottle:'b_ginger', price:20, main:'#C2B200', bg:'#F7F2C4', deep:'#6B6100', fruits:[['i_pineapple'],['i_ginger'],['i_pineapple'],['i_ginger']]},
+  {name:['Twist',''], ing:'Pineapple, Cucumber, Mint Leaves', bottle:'b_twist', price:20, main:'#2EA85A', bg:'#D5F3DE', deep:'#145F31', fruits:[['i_pineapple'],['i_cucumber'],['i_mint'],['i_pineapple'],['i_cucumber'],['i_mint']]},
+  {name:['Liquid','Gold'], ing:'Orange, Pineapple, Mango, Passion Fruit, Lemon, Ginger', bottle:'b_gold', price:27, main:'#E09A00', bg:'#FFF1C2', deep:'#7A4E00', fruits:[['i_orange'],['i_pineapple'],['i_mango'],['i_passion'],['i_lemon'],['i_ginger']]},
 ];
 const DRINKS = {
   'Signature': {note:'Signature cocktails', items:[
