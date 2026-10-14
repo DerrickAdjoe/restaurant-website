@@ -2678,3 +2678,11 @@ footer {
 footer {
   background: radial-gradient(60% 120% at 100% 50%, rgba(158,47,69,.20), transparent 70%), #1c1e24;
 }
+
+/* ================= ORANGE DINE IN / TAKEOUT BUTTONS ================= */
+
+.d-mode button.on {
+  background: linear-gradient(90deg, var(--amber), var(--amber2));
+  color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(242,154,46,.6);
+}
