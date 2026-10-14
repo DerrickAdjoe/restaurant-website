@@ -2693,3 +2693,9 @@ footer {
   border-color: transparent;
   box-shadow: 0 6px 16px -6px rgba(242,154,46,.6);
 }
+
+/* ================= JUICE CARD LOGO ================= */
+
+.pnav .pb img {
+  width: 76px;
+}

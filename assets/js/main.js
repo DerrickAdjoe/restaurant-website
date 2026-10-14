@@ -60,6 +60,8 @@ const IMG = {
   "d_bishop": "assets/images/d_bishop.jpg",
   "d_capone": "assets/images/d_capone.jpg",
   "d_guavana": "assets/images/d_guavana.jpg",
+  "badge_dark": "assets/images/badge_dark.webp",
+  "d_paloma": "assets/images/d_paloma.jpg",
   "i_orange": "assets/images/i_orange.svg",
   "i_lemon": "assets/images/i_lemon.svg",
   "i_cucumber": "assets/images/i_cucumber.svg",
@@ -74,7 +76,7 @@ const IMG = {
 const $ = s => document.querySelector(s);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ced = n => 'GH₵ ' + n;
-$('#logoTop').src=IMG.logo; $('#logoFoot').src=IMG.logo; $('#logoPress').src=IMG.badge;
+$('#logoTop').src=IMG.logo; $('#logoFoot').src=IMG.logo; $('#logoPress').src=IMG.badge_dark;
 $('#stripA').src = IMG.stripA; $('#stripB').src = IMG.stripB;
 
 /* ---------------- DATA (from the La Viva menu) ---------------- */
@@ -164,7 +166,7 @@ const PHOTO = {
   'Virgin Mojito':['d_mojito'], 'Tropical Twist':['g_peach','hue-rotate(-26deg) saturate(1.2)'], 'Emerald (Mocktail)':['d_emerald_m'],
   'First Kiss':['g_mred','hue-rotate(14deg)'], 'Guavana':['d_guavana'], 'Berry & Peach':['d_berry_peach'],
   'Coco Mojito':['g_clear'], 'Classic Man':['d_mojito'], 'Mojito Gold':['g_yellow'], 'Irish Tea':['g_orange','brightness(.8) saturate(.9)'], 'Mojito Melon':['g_mred','hue-rotate(-8deg) brightness(1.08)'],
-  'Paloma':['g_mred','hue-rotate(10deg) saturate(.9)'], 'Classic Daiquiri':['d_margarita'], '10 Ova 10':['g_yellow','saturate(.8)'], 'Sensational':['g_mred'],
+  'Paloma':['d_paloma'], 'Classic Daiquiri':['d_margarita'], '10 Ova 10':['g_yellow','saturate(.8)'], 'Sensational':['g_mred'],
   'Berry Mojito':['g_mred','hue-rotate(-8deg)'], 'Passion Mojito':['g_yellow'],
   'Strawberry Yogurt':['g_mred','saturate(.7) brightness(1.15)'], 'Blueberry Yogurt':['g_mred','hue-rotate(-70deg) saturate(.8)'], 'Milkyway':['g_yellow','saturate(.6) brightness(1.1)'],
   'Mango Magic':['g_yellow'], 'Banana Oatmeal':['g_white','sepia(.4)'], 'Oreo Krusher':['g_white','grayscale(.6) brightness(.9)'],
