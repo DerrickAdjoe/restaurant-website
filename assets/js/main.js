@@ -374,7 +374,7 @@ function renderCart(){
     const lines=cart.map(c=>`${c.qty} × ${c.name}${c.det?' ('+c.det+')':''} - ${ced(c.qty*c.price)}`);
     const note=$('#dNote').value.trim();
     const msg=`Hello La Viva Lounge, I'd like to order (${mode}):\n${lines.join('\n')}\nTotal: ${ced(tot)}${note?'\n'+note:''}`;
-    wa.href='https://wa.me/233544369707?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
+    wa.href='https://wa.me/233541569693?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
   } else { wa.removeAttribute('href'); wa.setAttribute('aria-disabled','true'); }
 }
 $('#dNote').addEventListener('input',renderCart);
