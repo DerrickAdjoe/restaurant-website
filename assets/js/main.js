@@ -60,6 +60,12 @@ const IMG = {
   "d_bishop": "assets/images/d_bishop.jpg",
   "d_capone": "assets/images/d_capone.jpg",
   "d_guavana": "assets/images/d_guavana.jpg",
+  "sm_strawberry": "assets/images/sm_strawberry.jpg",
+  "sm_blueberry": "assets/images/sm_blueberry.jpg",
+  "sm_milkyway": "assets/images/sm_milkyway.jpg",
+  "sm_mango": "assets/images/sm_mango.jpg",
+  "sm_banana_oat": "assets/images/sm_banana_oat.jpg",
+  "sm_oreo": "assets/images/sm_oreo.jpg",
   "badge_dark": "assets/images/badge_dark.webp",
   "d_paloma": "assets/images/d_paloma.jpg",
   "i_orange": "assets/images/i_orange.svg",
@@ -168,8 +174,8 @@ const PHOTO = {
   'Coco Mojito':['g_clear'], 'Classic Man':['d_mojito'], 'Mojito Gold':['g_yellow'], 'Irish Tea':['g_orange','brightness(.8) saturate(.9)'], 'Mojito Melon':['g_mred','hue-rotate(-8deg) brightness(1.08)'],
   'Paloma':['d_paloma'], 'Classic Daiquiri':['d_margarita'], '10 Ova 10':['g_yellow','saturate(.8)'], 'Sensational':['g_mred'],
   'Berry Mojito':['g_mred','hue-rotate(-8deg)'], 'Passion Mojito':['g_yellow'],
-  'Strawberry Yogurt':['g_mred','saturate(.7) brightness(1.15)'], 'Blueberry Yogurt':['g_mred','hue-rotate(-70deg) saturate(.8)'], 'Milkyway':['g_yellow','saturate(.6) brightness(1.1)'],
-  'Mango Magic':['g_yellow'], 'Banana Oatmeal':['g_white','sepia(.4)'], 'Oreo Krusher':['g_white','grayscale(.6) brightness(.9)'],
+  'Strawberry Yogurt':['sm_strawberry'], 'Blueberry Yogurt':['sm_blueberry'], 'Milkyway':['sm_milkyway'],
+  'Mango Magic':['sm_mango'], 'Banana Oatmeal':['sm_banana_oat'], 'Oreo Krusher':['sm_oreo'],
 };
 
 /* ---------------- HERO PHOTO ---------------- */
