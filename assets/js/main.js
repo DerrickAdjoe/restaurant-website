@@ -70,13 +70,13 @@ $('#stripA').src = IMG.stripA; $('#stripB').src = IMG.stripB;
 /* ---------------- DATA (from the La Viva menu) ---------------- */
 const FOOD = [
   {id:'jollof', name:'Gizzy Jollof', img:'f_jollof', story:"Welcome to your ultimate jollof rice destination. We don't just make jollof rice, we master it. Every single batch is cooked to order in a blazing hot wok, delivering that authentic, aromatic satisfaction for your taste buds with a lingering memory.", tag:'Popular', cats:['popular','plates'], desc:'Jollof with gizzard chunks, plantain, protein, veggies, gizzard khebab', opts:[['M pack',50],['L pack',80]]},
-  {id:'bigdaddy', name:'Big Daddy Shawarma', img:'f_bigdaddy', story:"Craving the perfect roll? Savor the bold flavor of slow-roasted, perfectly spiced shawarma wrapped in warm, fluffy pita. Juicy and tender chicken and beef bursting with flavor, tightly wrapped, creamy and spicy, made just for you.", tag:'Best seller', cats:['popular','shawarma'], desc:'Chicken, beef, veggies, cream / sauce, tortilla', opts:[['Medium',55],['Loaded',80]]},
+  {id:'bigdaddy', name:'Big Daddy Shawarma', img:'f_bigdaddy', story:"Craving the perfect roll? Savor the bold flavor of slow-roasted, perfectly spiced shawarma wrapped in warm, fluffy pita. Juicy and tender chicken and beef bursting with flavor, tightly wrapped, creamy and spicy, made just for you.", tag:'Best seller', cats:['popular','shawarma'], desc:'Chicken, beef, veggies, cream / sauce, tortilla', opts:[['Medium',60],['Loaded',80]]},
   {id:'fries', name:'Loaded Fries', img:'f_fries_wide', tag:'Popular', cats:['popular','plates'], desc:'Crispy fries, melted cheese and sauce, protein, fresh veggies', opts:[['M pack',50],['L pack',80]]},
   {id:'chshaw', name:'Chicken Shawarma', img:'f_chshaw', story:"Craving the perfect roll? Savor the bold flavor of slow-roasted, perfectly spiced shawarma wrapped in warm, fluffy pita. Juicy and tender chicken and beef bursting with flavor, tightly wrapped, creamy and spicy, made just for you.", tag:'Wrap', cats:['shawarma'], desc:'Chicken, veggies, cream / sauce, tortilla', opts:[['Medium',50],['Loaded',65]]},
-  {id:'samosa', name:'Samosa', img:'f_samosa', tag:'Bites', cats:['shawarma','popular'], desc:'Samosa with black pepper sauce dip', opts:[['5 pieces',35],['8 pieces',45]]},
-  {id:'crepes', name:'Crepes (Pancakes)', img:'f_crepes', tag:'Sweet', cats:['shawarma'], desc:'Pancakes, cream, filling, raisins, M&M / party sprinkles', opts:[['5 pieces',30],['8 pieces',45]], fill:['Strawberry sauce + cream','Blueberry sauce + cream']},
+  {id:'samosa', name:'Samosa', img:'f_samosa', tag:'Bites', cats:['shawarma','popular'], desc:'Samosa with black pepper sauce dip', opts:[['5 pieces',30],['8 pieces',45]]},
+  {id:'crepes', name:'Crepes (Pancakes)', img:'f_crepes', tag:'Sweet', cats:['shawarma'], desc:'Pancakes, cream, filling, raisins, M&M / party sprinkles', opts:[['4 pieces',25],['5 pieces',30]], fill:['Strawberry sauce + cream','Blueberry sauce + cream']},
   {id:'salad', name:'Chicken Salad', img:'f_salad', tag:'Fresh', cats:['plates'], desc:'Fried chicken, veggies, mayonnaise, cream and mixed sauce', opts:[['M pack',40],['L pack',60]]},
-  {id:'wings', name:'Spicy Garlic Honey Wings / Thighs', img:'f_wings', story:"Meet your new obsession: Spicy Honey Garlic Wings. We take our extra-crispy, jumbo chicken wings and toss them in a sticky, addictive glaze made from pure local honey, roasted garlic, and a kick of fiery chili. It’s the perfect balance of sweet, savory, and heat that hits just right.", tag:'Hot', cats:['plates','popular'], desc:'Crispy and juicy chicken wings or thighs, garlic honey sauce, spices', opts:[['Wings · 5 pcs',50],['Wings · 10 pcs',105],['Thighs · 5 pcs',55],['Thighs · 10 pcs',120]]},
+  {id:'wings', name:'Spicy Garlic Honey Wings / Thighs', img:'f_wings', story:"Meet your new obsession: Spicy Honey Garlic Wings. We take our extra-crispy, jumbo chicken wings and toss them in a sticky, addictive glaze made from pure local honey, roasted garlic, and a kick of fiery chili. It’s the perfect balance of sweet, savory, and heat that hits just right.", tag:'Hot', cats:['plates','popular'], desc:'Crispy and juicy chicken wings or thighs, garlic honey sauce, spices', opts:[['Wings · 5 pcs',50],['Wings · 10 pcs',105],['Thighs · 6 pcs',45],['Thighs · 10 pcs',100]]},
 ];
 const CATS = [
   {id:'popular', label:'Popular', img:'f_chshaw', color:'#C8102E'},
@@ -93,10 +93,10 @@ const JUICES = [
 const DRINKS = {
   'Signature': {note:'Signature cocktails', items:[
     ['Peach Island',45,'OJ, Peach Schnapps, Peach Syrup, Mango Juice, Cranberry Juice, Vodka, Wine Float','#ff9a5a','#ffd27a'],
-    ['Passion Wave',35,'Vodka, Peach Schnapps, Coconut Rum, OJ, Passion Puree, Pina Juice','#ff8a00','#ffd166'],
-    ['Emerald',30,'Pina Juice, Rum, Triple Sec, Midori, Blue Curacao, OJ, Mint Leaves','#079e6e','#9be15d'],
+    ['Passion Wave',40,'Vodka, Peach Schnapps, Coconut Rum, OJ, Passion Puree, Pina Juice','#ff8a00','#ffd166'],
+    ['Emerald',40,'Pina Juice, Rum, Triple Sec, Midori, Blue Curacao, OJ, Mint Leaves','#079e6e','#9be15d'],
     ['Twilight',40,'Strawberry Puree, Malibu, Pina Juice, Peach Schnapps, Cranberry, Dark Rum','#7c3aed','#ec4899'],
-    ['Supernova',50,'Strawberry Puree, Brandy, OJ, Triple Sec, Honey Syrup, Red Wine','#b0102f','#f59e0b'],
+    ['Supernova',45,'Strawberry Puree, Brandy, OJ, Triple Sec, Honey Syrup, Red Wine','#b0102f','#f59e0b'],
     ['Hookup',45,'Rum, Coconut Rum, Peach Schnapps, Amaretto, Passion Fruit Juice','#f97316','#fde047'],
   ]},
   'Special': {note:'Special cocktails', items:[
@@ -104,7 +104,7 @@ const DRINKS = {
     ['Long Island Ice Tea',45,'Rum, Gin, Vodka, Tequila, Triple Sec, Sweet & Sour, Cola','#7c2d12','#d97706'],
     ['Hi-Life (AMF)',45,'Rum, Gin, Vodka, Tequila, Triple Sec, Sweet & Sour, Blue Curacao, Soda','#1d4ed8','#22d3ee'],
     ['Bishop (Slushie)',55,'Pineapple, Mint Leaves, Lime Juice, Blue Curacao, Triple Sec, Apple Vodka, Rum','#0ea5e9','#a7f3d0'],
-    ['Capone (Slushie)',55,'Strawberries, Lime Juice, Triple Sec, Mint, Rum, Vodka, Wine','#be123c','#fb7185'],
+    ['Capone (Slushie)',60,'Strawberries, Lime Juice, Triple Sec, Mint, Rum, Vodka, Wine','#be123c','#fb7185'],
   ]},
   'Classic': {note:'Classic cocktails', items:[
     ['Pina Colada',40,'Pina Juice, Coconut Rum, Coconut Cream','#fde68a','#fffbeb'],
@@ -113,21 +113,35 @@ const DRINKS = {
     ['Tequila Sunrise',35,'Tequila, Orange Juice, Lime Juice, Triple Sec, Grenadine','#c81e1e','#fbbf24'],
     ['Margarita',40,'Tequila, Triple Sec, Lime Juice, Agave Syrup','#bef264','#f7fee7'],
     ['Cosmopolitan',35,'Vodka, Lemon Juice, Triple Sec, Cranberry Juice','#be123c','#f472b6'],
+    ['Paloma',40,'Tequila, Grapefruit Juice, Triple Sec, Lime Juice','#fb7185','#fecdd3'],
+    ['Classic Daiquiri',35,'Lime Juice, Simple Syrup, Rum, Triple Sec','#d9f99d','#f7fee7'],
   ]},
   'Mocktails': {note:'Mocktails, non-alcoholic', items:[
-    ['Virgin Mojito',25,'Lime Juice, Mint Leaves, Syrups, Soda Lime','#bef264','#f0fdf4'],
-    ['Tropical Twist',30,'Guava Juice, Passion Juice, OJ, Pina Juice, Lime Juice, Strawberry Syrup','#fb923c','#f472b6'],
-    ['Emerald (Mocktail)',25,'Midori, Blue Curacao, Pina Juice, Mint Syrup, OJ, Mint Leaves','#0d9488','#86efac'],
-    ['First Kiss',30,'Mango Juice, Pina Juice, Strawberry Syrup, Mint, Lipton Lime Soda','#f43f5e','#fbbf24'],
-    ['Guavana',30,'Guava Juice, Orange Juice, Passion Juice, Strawberry Puree','#fb7185','#fecdd3'],
-    ['Berry & Peach',25,'Peach Syrup, Orange Juice, Mango Juice, Cranberry Juice Float','#e11d48','#fb923c'],
+    ['Virgin Mojito',30,'Lime Juice, Mint Leaves, Syrups, Soda Lime','#bef264','#f0fdf4'],
+    ['Tropical Twist',35,'Guava Juice, Passion Juice, OJ, Pina Juice, Lime Juice, Strawberry Syrup','#fb923c','#f472b6'],
+    ['Emerald (Mocktail)',30,'Midori, Blue Curacao, Pina Juice, Mint Syrup, OJ, Mint Leaves','#0d9488','#86efac'],
+    ['First Kiss',35,'Mango Juice, Pina Juice, Strawberry Syrup, Mint, Lipton Lime Soda','#f43f5e','#fbbf24'],
+    ['Guavana',35,'Guava Juice, Orange Juice, Passion Juice, Strawberry Puree','#fb7185','#fecdd3'],
+    ['Berry & Peach',35,'Peach Syrup, Orange Juice, Mango Juice, Cranberry Juice Float','#e11d48','#fb923c'],
     ['Coco Mojito',25,'Lime Juice, Simple Syrup, Mint Leaves, Coconut Cream, Lime Soda','#d9f99d','#ffffff'],
+    ['10 Ova 10',30,'Lime Juice, Cinnamon Syrup, Pineapple Juice, Lime Soda','#fde68a','#fffbeb'],
+    ['Sensational',35,'Lime Juice, Strawberry Syrup, Lipton Lime Soda','#f43f5e','#fecdd3'],
   ]},
   'Mojitos': {note:'Mojitos', items:[
     ['Classic Man',30,'Rum, Lime Juice, Simple Syrup, Mint, Lime Soda','#86efac','#f0fdf4'],
     ['Mojito Gold',35,'Rum, Sweet & Sour, Mint, Lipton Lime Soda','#eab308','#fef08a'],
     ['Irish Tea',35,'Whisky, Sweet & Sour, Mint, Lipton Lime Soda','#92400e','#fbbf24'],
     ['Mojito Melon',30,'Rum, Lime Juice, Simple Syrup, Mint, Lime Soda','#f43f5e','#fecdd3'],
+    ['Berry Mojito',30,'Rum, Lime Juice, Simple Syrup, Mint Leaves, Lime Soda, Strawberry','#e11d48','#fecdd3'],
+    ['Passion Mojito',35,'Rum, Lime Juice, Simple Syrup, Mint Leaves, Lime Soda, Passion Puree','#f59e0b','#fde68a'],
+  ]},
+  'Smoothies': {note:'Premium smoothies', items:[
+    ['Strawberry Yogurt',30,'Frozen Strawberries, Yogurt, Cream, Milk','#f472b6','#fce7f3'],
+    ['Blueberry Yogurt',35,'Frozen Blueberries, Yogurt, Cream, Milk','#7c3aed','#ede9fe'],
+    ['Milkyway',35,'Banana, Pineapple, Mango, Peanut Butter, Milk','#fbbf24','#fef3c7'],
+    ['Mango Magic',30,'Banana, Mango, Passion Pulp, Yogurt, Milk','#f59e0b','#fde68a'],
+    ['Banana Oatmeal',35,'Banana, Strawberry, Oat, Peanut Butter, Milk','#d6b38a','#f5ebe0'],
+    ['Oreo Krusher',35,'Oreo Biscuit, Cream, Milk, Vanilla Syrup, Vanilla Ice Cream','#57534e','#e7e5e4'],
   ]},
 };
 const PHOTO = {
@@ -140,6 +154,10 @@ const PHOTO = {
   'Virgin Mojito':['d_mojito'], 'Tropical Twist':['g_peach','hue-rotate(-26deg) saturate(1.2)'], 'Emerald (Mocktail)':['d_emerald_m'],
   'First Kiss':['g_mred','hue-rotate(14deg)'], 'Guavana':['d_guavana'], 'Berry & Peach':['d_berry_peach'],
   'Coco Mojito':['g_clear'], 'Classic Man':['d_mojito'], 'Mojito Gold':['g_yellow'], 'Irish Tea':['g_orange','brightness(.8) saturate(.9)'], 'Mojito Melon':['g_mred','hue-rotate(-8deg) brightness(1.08)'],
+  'Paloma':['g_mred','hue-rotate(10deg) saturate(.9)'], 'Classic Daiquiri':['d_margarita'], '10 Ova 10':['g_yellow','saturate(.8)'], 'Sensational':['g_mred'],
+  'Berry Mojito':['g_mred','hue-rotate(-8deg)'], 'Passion Mojito':['g_yellow'],
+  'Strawberry Yogurt':['g_mred','saturate(.7) brightness(1.15)'], 'Blueberry Yogurt':['g_mred','hue-rotate(-70deg) saturate(.8)'], 'Milkyway':['g_yellow','saturate(.6) brightness(1.1)'],
+  'Mango Magic':['g_yellow'], 'Banana Oatmeal':['g_white','sepia(.4)'], 'Oreo Krusher':['g_white','grayscale(.6) brightness(.9)'],
 };
 
 /* ---------------- HERO PHOTO ---------------- */
@@ -285,7 +303,7 @@ function renderTabs(){
   $('#tabs').innerHTML = Object.keys(DRINKS).map(k=>`<button class="tab ${k===curTab?'on':''}" role="tab" aria-selected="${k===curTab}" data-tab="${k}">${k}</button>`).join('');
   document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{ curTab=b.dataset.tab; renderTabs(); renderDrinks(); });
   $('#tabNote').textContent = DRINKS[curTab].note;
-  const strip={Signature:['stripA','stripB'],Special:['stripB','stripA'],Classic:['stripA','stripB'],Mocktails:['stripB','stripA'],Mojitos:['stripB','stripA']}[curTab];
+  const strip={Signature:['stripA','stripB'],Special:['stripB','stripA'],Classic:['stripA','stripB'],Mocktails:['stripB','stripA'],Mojitos:['stripB','stripA'],Smoothies:['stripA','stripB']}[curTab];
   $('#stripA').src=IMG[strip[0]]; $('#stripB').src=IMG[strip[1]];
 }
 function renderDrinks(){
