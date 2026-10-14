@@ -2681,8 +2681,15 @@ footer {
 
 /* ================= ORANGE DINE IN / TAKEOUT BUTTONS ================= */
 
+.d-mode button {
+  color: var(--amber);
+  font-weight: 700;
+  border: 1.5px solid rgba(242,154,46,.55);
+}
+
 .d-mode button.on {
   background: linear-gradient(90deg, var(--amber), var(--amber2));
   color: #fff;
+  border-color: transparent;
   box-shadow: 0 6px 16px -6px rgba(242,154,46,.6);
 }

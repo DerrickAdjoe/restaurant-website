@@ -374,7 +374,7 @@ function renderCart(){
     const lines=cart.map(c=>`${c.qty} × ${c.name}${c.det?' ('+c.det+')':''} - ${ced(c.qty*c.price)}`);
     const note=$('#dNote').value.trim();
     const tag=mode==='Takeout'?'*TAKEOUT*':'*DINE IN*';
-    const msg=`Hello La Viva Lounge, I'd like to order:  ${tag}\n\n${lines.join('\n')}\n\nTotal: ${ced(tot)}${note?'\n\n'+note:''}`;
+    const msg=`Hello La Viva Lounge, I'd like to order:     ${tag}\n\n${lines.join('\n')}\n\nTotal: ${ced(tot)}${note?'\n\n'+note:''}`;
     wa.href='https://wa.me/233541569693?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
   } else { wa.removeAttribute('href'); wa.setAttribute('aria-disabled','true'); }
 }
