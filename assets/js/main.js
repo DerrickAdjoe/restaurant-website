@@ -378,16 +378,38 @@ function renderCart(){
   document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{ cart[+b.dataset.p].qty++; save(); renderCart(); });
   $('#dTot').textContent=ced(tot);
   const wa=$('#waBtn');
-  if (cart.length){
+  const REF={'Dine in':'Table number','Takeout':'Ticket number','Online':'Phone number'};
+  const name=$('#dName').value.trim(), ref=$('#dRef').value.trim(), loc=$('#dLoc').value.trim();
+  const needLoc = mode==='Online' && fulfil==='Delivery';
+  const ready=cart.length && name && ref && (!needLoc || loc);
+  let hint='';
+  if (cart.length && !ready){
+    const miss=[]; if(!name) miss.push('your name'); if(!ref) miss.push(REF[mode].toLowerCase()); if(needLoc && !loc) miss.push('delivery location');
+    hint='Add '+miss.join(', ').replace(/, ([^,]*)$/,' and $1')+' to send your order';
+  }
+  $('#dHint').textContent=hint;
+  if (ready){
     const lines=cart.map(c=>`${c.qty} × ${c.name}${c.det?' ('+c.det+')':''} - ${ced(c.qty*c.price)}`);
-    const note=$('#dNote').value.trim();
-    const tag=mode==='Takeout'?'*TAKEOUT*':'*DINE IN*';
-    const msg=`Hello La Viva Lounge, I'd like to order:     ${tag}\n\n${lines.join('\n')}\n\nTotal: ${ced(tot)}${note?'\n\n'+note:''}`;
+    const tag = mode==='Online' ? `*ONLINE - ${fulfil.toUpperCase()}*` : '*'+mode.toUpperCase()+'*';
+    const where = needLoc ? `\nLocation: ${loc}` : '';
+    const msg=`Hello La Viva Lounge, I'd like to order:     ${tag}\n\nName: ${name}\n${REF[mode]}: ${ref}${where}\n\n${lines.join('\n')}\n\nTotal: ${ced(tot)}`;
     wa.href='https://wa.me/233541569693?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
   } else { wa.removeAttribute('href'); wa.setAttribute('aria-disabled','true'); }
 }
-$('#dNote').addEventListener('input',renderCart);
-document.querySelectorAll('.d-mode button').forEach(b=>b.onclick=()=>{ mode=b.dataset.mode; document.querySelectorAll('.d-mode button').forEach(x=>x.classList.toggle('on',x===b)); renderCart(); });
+let fulfil='Delivery';
+function setRefField(){
+  const REF={'Dine in':'Table number','Takeout':'Ticket number','Online':'Phone number'};
+  const r=$('#dRef'); r.placeholder=REF[mode]; r.setAttribute('aria-label',REF[mode]);
+  r.type = mode==='Online' ? 'tel' : 'text';
+  $('#dOnline').hidden = mode!=='Online';
+  $('#dLoc').hidden = !(mode==='Online' && fulfil==='Delivery');
+}
+$('#dName').addEventListener('input',renderCart);
+$('#dRef').addEventListener('input',renderCart);
+$('#dLoc').addEventListener('input',renderCart);
+document.querySelectorAll('.d-mode button').forEach(b=>b.onclick=()=>{ mode=b.dataset.mode; document.querySelectorAll('.d-mode button').forEach(x=>x.classList.toggle('on',x===b)); setRefField(); renderCart(); });
+document.querySelectorAll('.d-sub button').forEach(b=>b.onclick=()=>{ fulfil=b.dataset.fulfil; document.querySelectorAll('.d-sub button').forEach(x=>x.classList.toggle('on',x===b)); setRefField(); renderCart(); });
+setRefField();
 document.querySelectorAll('[data-open-cart]').forEach(b=>b.onclick=()=>{ $('#scrim').classList.add('on'); $('#drawer').classList.add('on'); });
 $('#dClose').onclick=hideAll;
 let tt; function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('on'),1800); }

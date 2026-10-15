@@ -2699,3 +2699,76 @@ footer {
 .pnav .pb img {
   width: 76px;
 }
+
+/* ================= ORDER DETAILS (NAME + TABLE / TICKET / PHONE) ================= */
+
+.d-who {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.d-who input {
+  width: 100%;
+  border: 1.5px solid rgba(255,255,255,.18);
+  border-radius: 12px;
+  padding: 11px 12px;
+  font: inherit;
+  font-size: 14px;
+  background: transparent;
+  color: var(--text);
+}
+
+.d-who input:focus {
+  outline: none;
+  border-color: var(--amber);
+}
+
+.d-hint {
+  font-size: 12.5px;
+  color: var(--amber);
+  margin: 0 0 10px;
+}
+
+.d-hint:empty {
+  display: none;
+}
+
+.d-mode button {
+  padding: 10px 6px;
+}
+
+/* ================= ONLINE: DELIVERY OR PICK UP ================= */
+
+.d-online {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.d-online[hidden], .d-who input[hidden] {
+  display: none;
+}
+
+.d-sub {
+  display: flex;
+  gap: 6px;
+}
+
+.d-sub button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(242,154,46,.55);
+  background: transparent;
+  color: var(--amber);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.d-sub button.on {
+  background: linear-gradient(90deg, var(--amber), var(--amber2));
+  color: #fff;
+  border-color: transparent;
+}
