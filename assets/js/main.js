@@ -363,12 +363,13 @@ $('#mClose').onclick=hideAll; $('#scrim').onclick=hideAll; addEventListener('key
    key:   Paystack PUBLIC key (starts pk_test_ for testing, pk_live_ when live).
           Leave it empty ('') and payment is switched off: orders go to WhatsApp as before.
    modes: order types that must pay before the order is sent. */
-const PAY = { key: '', modes: ['Takeout','Online'], fee: 0.0195 };   // fee: Paystack Ghana 1.95%, paid by the customer
+const PAY = { key: 'pk_test_6dc966173d2c549a5f2ac95f619167c87e3c4bd8', modes: ['Takeout','Online'], fee: 0.0195 };   // fee: Paystack Ghana 1.95%, paid by the customer
 const ced2 = n => 'GH₵ ' + n.toFixed(2);
 function chargeFor(t){ return Math.ceil((t/(1-PAY.fee)+0.01)*100)/100; }   // La Viva still receives the full menu total
 let paid = null;
-function payNeeded(){ return !!PAY.key && PAY.modes.includes(mode); }
-if (PAY.key){ const ps=document.createElement('script'); ps.src='https://js.paystack.co/v1/inline.js'; document.head.appendChild(ps); }
+const PAY_ON = !!PAY.key && (!PAY.key.startsWith('pk_test_') || /paytest/.test(location.search));   // test keys only work on ?paytest links
+function payNeeded(){ return PAY_ON && PAY.modes.includes(mode); }
+if (PAY_ON){ const ps=document.createElement('script'); ps.src='https://js.paystack.co/v1/inline.js'; document.head.appendChild(ps); }
 
 /* ---------------- Cart ---------------- */
 let cart=[], mode='Dine in';
