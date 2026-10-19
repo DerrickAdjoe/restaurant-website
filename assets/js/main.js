@@ -359,6 +359,15 @@ $('#mAdd').onclick=()=>{
 };
 $('#mClose').onclick=hideAll; $('#scrim').onclick=hideAll; addEventListener('keydown',e=>{ if(e.key==='Escape') hideAll(); });
 
+/* ---------------- Mobile Money payment (Paystack) ----------------
+   key:   Paystack PUBLIC key (starts pk_test_ for testing, pk_live_ when live).
+          Leave it empty ('') and payment is switched off: orders go to WhatsApp as before.
+   modes: order types that must pay before the order is sent. */
+const PAY = { key: '', modes: ['Takeout','Online'] };
+let paid = null;
+function payNeeded(){ return !!PAY.key && PAY.modes.includes(mode); }
+if (PAY.key){ const ps=document.createElement('script'); ps.src='https://js.paystack.co/v1/inline.js'; document.head.appendChild(ps); }
+
 /* ---------------- Cart ---------------- */
 let cart=[], mode='Dine in';
 try { const s=JSON.parse(localStorage.getItem('laviva-cart')||'[]'); if (Array.isArray(s)) cart=s; } catch(e){}
@@ -388,19 +397,62 @@ function renderCart(){
     hint='Add '+miss.join(', ').replace(/, ([^,]*)$/,' and $1')+' to send your order';
   }
   $('#dHint').textContent=hint;
+  const payBtn=$('#payBtn'), rc=$('#dReceipt'), locked=!!paid;
+  $('#dWho').hidden=locked; $('#dHint').hidden=locked; rc.hidden=!locked;
+  document.querySelectorAll('.d-mode button, [data-m], [data-p]').forEach(b=>b.disabled=locked);
+  if (locked){
+    rc.innerHTML=`<div class="ok" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg></div><b class="t">Payment successful</b><div class="r"><span>Receipt</span><b>${paid.ref}</b></div><div class="r"><span>Amount</span><b>${ced(paid.total)}</b></div><div class="r"><span>Paid with</span><b>Mobile Money</b></div><div class="r"><span>Date</span><b>${paid.when}</b></div><div class="r"><span>Order</span><b>${paid.mode} · ${paid.refVal}</b></div><button class="d-new" type="button" id="dNew">Start a new order</button>`;
+    $('#dNew').onclick=()=>{ paid=null; cart=[]; save(); renderCart(); };
+    payBtn.hidden=true; $('#dSecure').hidden=true; wa.hidden=false;
+    wa.href='https://wa.me/233544369707?text='+encodeURIComponent(paid.msg); wa.setAttribute('aria-disabled','false');
+    return;
+  }
+  const mustPay=payNeeded();
+  payBtn.hidden=!mustPay; $('#dSecure').hidden=!mustPay; wa.hidden=mustPay;
   if (ready){
     const lines=cart.map(c=>`${c.qty} × ${c.name}${c.det?' ('+c.det+')':''} - ${ced(c.qty*c.price)}`);
     const tag = mode==='Online' ? `*ONLINE - ${fulfil.toUpperCase()}*` : '*'+mode.toUpperCase()+'*';
     const where = needLoc ? `\nLocation: ${loc}` : '';
     const msg=`Hello La Viva Lounge, I'd like to order:     ${tag}\n\nName: ${name}\n${REF[mode]}: ${ref}${where}\n\n${lines.join('\n')}\n\nTotal: ${ced(tot)}`;
-    wa.href='https://wa.me/233544369707?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
-  } else { wa.removeAttribute('href'); wa.setAttribute('aria-disabled','true'); }
+    if (mustPay){
+      payBtn.disabled=false; payBtn.textContent=`Pay ${ced(tot)} with Mobile Money`;
+      payBtn.onclick=()=>startPay({msg,total:tot,mode:mode==='Online'?'Online '+fulfil:mode,refVal:ref,name,lines});
+    } else {
+      wa.href='https://wa.me/233544369707?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
+    }
+  } else {
+    payBtn.disabled=true; payBtn.textContent=`Pay ${ced(tot)} with Mobile Money`;
+    wa.removeAttribute('href'); wa.setAttribute('aria-disabled','true');
+  }
 }
+function startPay(o){
+  if (!window.PaystackPop){ toast('Payment is still loading. Try again in a moment.'); return; }
+  const ref='LV-'+Date.now().toString(36).slice(-5).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
+  const handler=PaystackPop.setup({
+    key: PAY.key, email: 'orders+'+ref.toLowerCase()+'@lavivalounge.com',
+    amount: Math.round(o.total*100), currency: 'GHS', ref: ref, channels: ['mobile_money'],
+    metadata: { custom_fields: [
+      { display_name:'Name', variable_name:'name', value:o.name },
+      { display_name:'Order type', variable_name:'order_type', value:o.mode+' · '+o.refVal },
+      { display_name:'Items', variable_name:'items', value:o.lines.join('; ') } ] },
+    callback: function(r){
+      const when=new Date().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+      const rf=(r && r.reference) || ref;
+      paid={ ref:rf, total:o.total, mode:o.mode, refVal:o.refVal, when,
+             msg: o.msg+`\n\n*PAID* · Receipt ${rf}\nPaid with Mobile Money · ${when}` };
+      renderCart(); toast('Payment successful. Now send your order.');
+    },
+    onClose: function(){ if(!paid) toast('Payment not completed. Your order was not sent.'); }
+  });
+  handler.openIframe();
+}
+$('#waBtn').addEventListener('click',()=>{ if(paid){ setTimeout(()=>{ cart=[]; save(); },500); } });
 let fulfil='Delivery';
 function setRefField(){
   const REF={'Dine in':'Table number','Takeout':'Ticket number','Online':'Phone number'};
   const r=$('#dRef'); r.placeholder=REF[mode]; r.setAttribute('aria-label',REF[mode]);
   r.type = mode==='Online' ? 'tel' : 'text';
+  $('#dGen').hidden = mode!=='Takeout';
   $('#dOnline').hidden = mode!=='Online';
   $('#dLoc').hidden = !(mode==='Online' && fulfil==='Delivery');
 }
@@ -409,6 +461,12 @@ $('#dRef').addEventListener('input',renderCart);
 $('#dLoc').addEventListener('input',renderCart);
 document.querySelectorAll('.d-mode button').forEach(b=>b.onclick=()=>{ mode=b.dataset.mode; document.querySelectorAll('.d-mode button').forEach(x=>x.classList.toggle('on',x===b)); setRefField(); renderCart(); });
 document.querySelectorAll('.d-sub button').forEach(b=>b.onclick=()=>{ fulfil=b.dataset.fulfil; document.querySelectorAll('.d-sub button').forEach(x=>x.classList.toggle('on',x===b)); setRefField(); renderCart(); });
+/* Takeout ticket number: generated on tap, e.g. T-1847-3 (time + a random digit) */
+$('#dGen').onclick=()=>{
+  const d=new Date(), p=n=>String(n).padStart(2,'0');
+  $('#dRef').value=`T-${p(d.getHours())}${p(d.getMinutes())}-${Math.floor(Math.random()*10)}`;
+  renderCart(); toast('Ticket number '+$('#dRef').value);
+};
 setRefField();
 document.querySelectorAll('[data-open-cart]').forEach(b=>b.onclick=()=>{ $('#scrim').classList.add('on'); $('#drawer').classList.add('on'); });
 $('#dClose').onclick=hideAll;

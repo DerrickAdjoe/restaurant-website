@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=3">
+<link rel="stylesheet" href="assets/css/styles.css?v=5">
 </head>
 <body>
 
@@ -186,8 +186,11 @@
   <div class="d-list" id="dList"></div>
   <div class="d-foot">
     <div class="d-tot"><span>Total</span><span id="dTot">GH₵ 0</span></div>
-    <div class="d-who"><input id="dName" type="text" placeholder="Name" autocomplete="name" aria-label="Name"><input id="dRef" type="text" placeholder="Table number" aria-label="Table number"><div class="d-online" id="dOnline" hidden><div class="d-sub" role="radiogroup" aria-label="Delivery or pick up"><button class="on" data-fulfil="Delivery">Delivery</button><button data-fulfil="Pick up">Pick up</button></div><input id="dLoc" type="text" placeholder="Delivery location / landmark" aria-label="Delivery location / landmark"></div></div>
+    <div class="d-who" id="dWho"><input id="dName" type="text" placeholder="Name" autocomplete="name" aria-label="Name"><div class="d-refrow"><input id="dRef" type="text" placeholder="Table number" aria-label="Table number"><button type="button" class="d-gen" id="dGen" hidden>Generate</button></div><div class="d-online" id="dOnline" hidden><div class="d-sub" role="radiogroup" aria-label="Delivery or pick up"><button class="on" data-fulfil="Delivery">Delivery</button><button data-fulfil="Pick up">Pick up</button></div><input id="dLoc" type="text" placeholder="Delivery location / landmark" aria-label="Delivery location / landmark"></div></div>
     <p class="d-hint" id="dHint"></p>
+    <div class="d-receipt" id="dReceipt" hidden></div>
+    <button class="pay" id="payBtn" type="button" hidden disabled>Pay with Mobile Money</button>
+    <p class="d-secure" id="dSecure" hidden>Secure Mobile Money payment: MTN, Telecel, AirtelTigo. Your order is sent to WhatsApp after payment.</p>
     <a class="wa" id="waBtn" target="_blank" rel="noopener" aria-disabled="true">Send order on WhatsApp</a>
     <span class="d-call">Prefer to call? <a href="tel:+233206423766">020 642 3766</a></span>
   </div>
@@ -195,6 +198,6 @@
 <button class="fab" id="fab" data-open-cart>Your order <span class="cart-count">0</span></button>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/js/main.js?v=3"></script>
+<script src="assets/js/main.js?v=5"></script>
 </body>
 </html>
