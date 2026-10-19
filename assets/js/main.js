@@ -363,7 +363,8 @@ $('#mClose').onclick=hideAll; $('#scrim').onclick=hideAll; addEventListener('key
    key:   Paystack PUBLIC key (starts pk_test_ for testing, pk_live_ when live).
           Leave it empty ('') and payment is switched off: orders go to WhatsApp as before.
    modes: order types that must pay before the order is sent. */
-const PAY = { key: 'pk_test_6dc966173d2c549a5f2ac95f619167c87e3c4bd8', modes: ['Takeout','Online'], fee: 0.0195 };   // fee: Paystack Ghana 1.95%, paid by the customer
+const PAY = { key: 'pk_test_6dc966173d2c549a5f2ac95f619167c87e3c4bd8', modes: ['Takeout','Online'], fee: 0.0195,
+                verify: 'https://laviva-pay.vercel.app/api/verify' };   // secure check on Vercel (secret key lives there)   // fee: Paystack Ghana 1.95%, paid by the customer
 const ced2 = n => 'GH₵ ' + n.toFixed(2);
 function chargeFor(t){ return Math.ceil((t/(1-PAY.fee)+0.01)*100)/100; }   // La Viva still receives the full menu total
 let paid = null;
@@ -443,9 +444,18 @@ function startPay(o){
     callback: function(r){
       const when=new Date().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
       const rf=(r && r.reference) || ref;
-      paid={ ref:rf, total:o.total, charge:o.charge, fee:o.fee, mode:o.mode, refVal:o.refVal, when,
-             msg: o.msg+`\nMobile money fee: ${ced2(o.fee)}\nAmount paid: ${ced2(o.charge)}\n\n*PAID* · Receipt ${rf}\nPaid with Mobile Money · ${when}` };
-      renderCart(); toast('Payment successful. Now send your order.');
+      const done=()=>{
+        paid={ ref:rf, total:o.total, charge:o.charge, fee:o.fee, mode:o.mode, refVal:o.refVal, when,
+               msg: o.msg+`\nMobile money fee: ${ced2(o.fee)}\nAmount paid: ${ced2(o.charge)}\n\n*PAID* · Receipt ${rf}\nPaid with Mobile Money · ${when}` };
+        renderCart(); toast('Payment successful. Now send your order.');
+      };
+      const fail=()=>toast(`We couldn't confirm payment ${rf} yet. Please call 020 642 3766 with this receipt number.`);
+      if (!PAY.verify){ done(); return; }
+      toast('Confirming your payment…');
+      fetch(PAY.verify+'?reference='+encodeURIComponent(rf),{cache:'no-store'})
+        .then(x=>x.json())
+        .then(v=>{ (v && v.paid && v.amount===Math.round(o.charge*100)) ? done() : fail(); })
+        .catch(fail);
     },
     onClose: function(){ if(!paid) toast('Payment not completed. Your order was not sent.'); }
   });
