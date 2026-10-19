@@ -363,7 +363,9 @@ $('#mClose').onclick=hideAll; $('#scrim').onclick=hideAll; addEventListener('key
    key:   Paystack PUBLIC key (starts pk_test_ for testing, pk_live_ when live).
           Leave it empty ('') and payment is switched off: orders go to WhatsApp as before.
    modes: order types that must pay before the order is sent. */
-const PAY = { key: '', modes: ['Takeout','Online'] };
+const PAY = { key: '', modes: ['Takeout','Online'], fee: 0.0195 };   // fee: Paystack Ghana 1.95%, paid by the customer
+const ced2 = n => 'GH₵ ' + n.toFixed(2);
+function chargeFor(t){ return Math.ceil((t/(1-PAY.fee)+0.01)*100)/100; }   // La Viva still receives the full menu total
 let paid = null;
 function payNeeded(){ return !!PAY.key && PAY.modes.includes(mode); }
 if (PAY.key){ const ps=document.createElement('script'); ps.src='https://js.paystack.co/v1/inline.js'; document.head.appendChild(ps); }
@@ -401,7 +403,7 @@ function renderCart(){
   $('#dWho').hidden=locked; $('#dHint').hidden=locked; rc.hidden=!locked;
   document.querySelectorAll('.d-mode button, [data-m], [data-p]').forEach(b=>b.disabled=locked);
   if (locked){
-    rc.innerHTML=`<div class="ok" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg></div><b class="t">Payment successful</b><div class="r"><span>Receipt</span><b>${paid.ref}</b></div><div class="r"><span>Amount</span><b>${ced(paid.total)}</b></div><div class="r"><span>Paid with</span><b>Mobile Money</b></div><div class="r"><span>Date</span><b>${paid.when}</b></div><div class="r"><span>Order</span><b>${paid.mode} · ${paid.refVal}</b></div><button class="d-new" type="button" id="dNew">Start a new order</button>`;
+    rc.innerHTML=`<div class="ok" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg></div><b class="t">Payment successful</b><div class="r"><span>Receipt</span><b>${paid.ref}</b></div><div class="r"><span>Order total</span><b>${ced2(paid.total)}</b></div><div class="r"><span>Mobile money fee</span><b>${ced2(paid.fee)}</b></div><div class="r"><span>Amount paid</span><b>${ced2(paid.charge)}</b></div><div class="r"><span>Paid with</span><b>Mobile Money</b></div><div class="r"><span>Date</span><b>${paid.when}</b></div><div class="r"><span>Order</span><b>${paid.mode} · ${paid.refVal}</b></div><button class="d-new" type="button" id="dNew">Start a new order</button>`;
     $('#dNew').onclick=()=>{ paid=null; cart=[]; save(); renderCart(); };
     payBtn.hidden=true; $('#dSecure').hidden=true; wa.hidden=false;
     wa.href='https://wa.me/233544369707?text='+encodeURIComponent(paid.msg); wa.setAttribute('aria-disabled','false');
@@ -415,13 +417,15 @@ function renderCart(){
     const where = needLoc ? `\nLocation: ${loc}` : '';
     const msg=`Hello La Viva Lounge, I'd like to order:     ${tag}\n\nName: ${name}\n${REF[mode]}: ${ref}${where}\n\n${lines.join('\n')}\n\nTotal: ${ced(tot)}`;
     if (mustPay){
-      payBtn.disabled=false; payBtn.textContent=`Pay ${ced(tot)} with Mobile Money`;
-      payBtn.onclick=()=>startPay({msg,total:tot,mode:mode==='Online'?'Online '+fulfil:mode,refVal:ref,name,lines});
+      const charge=chargeFor(tot), fee=+(charge-tot).toFixed(2);
+      payBtn.disabled=false; payBtn.textContent=`Pay ${ced2(charge)} with Mobile Money`;
+      $('#dSecure').textContent=`Includes ${ced2(fee)} mobile money fee. Secure payment: MTN, Telecel, AirtelTigo. Your order is sent to WhatsApp after payment.`;
+      payBtn.onclick=()=>startPay({msg,total:tot,charge,fee,mode:mode==='Online'?'Online '+fulfil:mode,refVal:ref,name,lines});
     } else {
       wa.href='https://wa.me/233544369707?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
     }
   } else {
-    payBtn.disabled=true; payBtn.textContent=`Pay ${ced(tot)} with Mobile Money`;
+    payBtn.disabled=true; payBtn.textContent=`Pay ${ced2(chargeFor(tot))} with Mobile Money`;
     wa.removeAttribute('href'); wa.setAttribute('aria-disabled','true');
   }
 }
@@ -430,7 +434,7 @@ function startPay(o){
   const ref='LV-'+Date.now().toString(36).slice(-5).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
   const handler=PaystackPop.setup({
     key: PAY.key, email: 'orders+'+ref.toLowerCase()+'@lavivalounge.com',
-    amount: Math.round(o.total*100), currency: 'GHS', ref: ref, channels: ['mobile_money'],
+    amount: Math.round(o.charge*100), currency: 'GHS', ref: ref, channels: ['mobile_money'],
     metadata: { custom_fields: [
       { display_name:'Name', variable_name:'name', value:o.name },
       { display_name:'Order type', variable_name:'order_type', value:o.mode+' · '+o.refVal },
@@ -438,8 +442,8 @@ function startPay(o){
     callback: function(r){
       const when=new Date().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
       const rf=(r && r.reference) || ref;
-      paid={ ref:rf, total:o.total, mode:o.mode, refVal:o.refVal, when,
-             msg: o.msg+`\n\n*PAID* · Receipt ${rf}\nPaid with Mobile Money · ${when}` };
+      paid={ ref:rf, total:o.total, charge:o.charge, fee:o.fee, mode:o.mode, refVal:o.refVal, when,
+             msg: o.msg+`\nMobile money fee: ${ced2(o.fee)}\nAmount paid: ${ced2(o.charge)}\n\n*PAID* · Receipt ${rf}\nPaid with Mobile Money · ${when}` };
       renderCart(); toast('Payment successful. Now send your order.');
     },
     onClose: function(){ if(!paid) toast('Payment not completed. Your order was not sent.'); }
