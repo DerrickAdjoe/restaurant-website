@@ -393,7 +393,7 @@ function renderCart(){
     const tag = mode==='Online' ? `*ONLINE - ${fulfil.toUpperCase()}*` : '*'+mode.toUpperCase()+'*';
     const where = needLoc ? `\nLocation: ${loc}` : '';
     const msg=`Hello La Viva Lounge, I'd like to order:     ${tag}\n\nName: ${name}\n${REF[mode]}: ${ref}${where}\n\n${lines.join('\n')}\n\nTotal: ${ced(tot)}`;
-    wa.href='https://wa.me/233541569693?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
+    wa.href='https://wa.me/233544369707?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
   } else { wa.removeAttribute('href'); wa.setAttribute('aria-disabled','true'); }
 }
 let fulfil='Delivery';

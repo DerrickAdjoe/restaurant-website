@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=2">
+<link rel="stylesheet" href="assets/css/styles.css?v=3">
 </head>
 <body>
 
@@ -58,8 +58,8 @@
     </div>
   </div>
   <div class="hero-strip">
-    <div class="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 3h14l-7 9v7m-4 2h8"/></svg><div><small>Service</small><b>Dine in · Takeout</b></div></div>
-    <div class="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><div><small>WhatsApp orders</small><b><a href="https://wa.me/233541569693" target="_blank" rel="noopener">054 156 9693</a></b></div></div>
+    <div class="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><div><small>Find us</small><b><a href="https://www.google.com/maps/search/?api=1&amp;query=Rowi+Junction+Adenta+Accra+Ghana" target="_blank" rel="noopener">Adenta, Rowi Junction</a></b></div></div>
+    <div class="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><div><small>WhatsApp orders</small><b><a href="https://wa.me/233544369707" target="_blank" rel="noopener">054 436 9707</a></b></div></div>
     <div class="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r=".8" fill="currentColor"/></svg><div><small>Follow</small><b>@Lavivalounge</b></div></div>
     <a class="scroll" href="#story" aria-label="Scroll down"><span></span></a>
   </div>
@@ -136,7 +136,7 @@
 <!-- ============ BAR ============ -->
 <section class="bar-sec" id="bar">
   <div class="sec-head">
-    <div><p class="eyebrow">The bar</p><h2>Craft cocktails.<br>Unforgettable nights.</h2></div>
+    <div><p class="eyebrow">The bar</p><h2>Crafted cocktails.<br>Unforgettable nights.</h2></div>
     <p>We believe a great cocktail is more than just a drink: it’s an experience. Our mixologists blend classic techniques with bold, modern flavors using house-made syrups, fresh-squeezed citrus, and hand-selected spirits. Whether you are settling in for a quiet after-work glass or kicking off the weekend with friends, your glass is always in good hands.</p>
   </div>
   <div class="strip"><div class="ph"><img id="stripA" alt="Colourful cocktails with fruit garnishes"></div><div class="ph"><img id="stripB" alt="Mojitos with crushed ice and fresh mint"></div></div>
@@ -154,8 +154,9 @@
       <span class="f-pill">Dine in | Takeout</span>
     </div>
     <div class="f-contact">
-      <div>WhatsApp orders: <a href="https://wa.me/233541569693" target="_blank" rel="noopener">054 156 9693</a></div>
-      <div>Calls: <a href="tel:+233544369707">054 436 9707</a></div>
+      <div>WhatsApp orders (MTN): <a href="https://wa.me/233544369707" target="_blank" rel="noopener">054 436 9707</a></div>
+      <div>Calls (Telecel): <a href="tel:+233206423766">020 642 3766</a></div>
+      <div>Find us: <a href="https://www.google.com/maps/search/?api=1&amp;query=Rowi+Junction+Adenta+Accra+Ghana" target="_blank" rel="noopener">Adenta, Rowi Junction, opposite Just Freddies</a></div>
       <div>Facebook, Instagram and TikTok: <strong>@Lavivalounge</strong></div>
     </div>
   </div>
@@ -188,12 +189,12 @@
     <div class="d-who"><input id="dName" type="text" placeholder="Name" autocomplete="name" aria-label="Name"><input id="dRef" type="text" placeholder="Table number" aria-label="Table number"><div class="d-online" id="dOnline" hidden><div class="d-sub" role="radiogroup" aria-label="Delivery or pick up"><button class="on" data-fulfil="Delivery">Delivery</button><button data-fulfil="Pick up">Pick up</button></div><input id="dLoc" type="text" placeholder="Delivery location / landmark" aria-label="Delivery location / landmark"></div></div>
     <p class="d-hint" id="dHint"></p>
     <a class="wa" id="waBtn" target="_blank" rel="noopener" aria-disabled="true">Send order on WhatsApp</a>
-    <span class="d-call">Prefer to call? <a href="tel:+233544369707">054 436 9707</a></span>
+    <span class="d-call">Prefer to call? <a href="tel:+233206423766">020 642 3766</a></span>
   </div>
 </aside>
 <button class="fab" id="fab" data-open-cart>Your order <span class="cart-count">0</span></button>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/js/main.js?v=2"></script>
+<script src="assets/js/main.js?v=3"></script>
 </body>
 </html>
