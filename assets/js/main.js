@@ -94,7 +94,7 @@ const FOOD = [
   {id:'samosa', name:'Samosa', img:'f_samosa', tag:'Bites', cats:['shawarma','popular'], desc:'Samosa with black pepper sauce dip', opts:[['5 pieces',30],['8 pieces',45]]},
   {id:'crepes', name:'Crepes (Pancakes)', img:'f_crepes', tag:'Sweet', cats:['shawarma'], desc:'Pancakes, cream, filling, raisins, M&M / party sprinkles', opts:[['4 pieces',25],['5 pieces',30]], fill:['Strawberry sauce + cream','Blueberry sauce + cream']},
   {id:'salad', name:'Chicken Salad', img:'f_salad', tag:'Fresh', cats:['plates'], desc:'Fried chicken, veggies, mayonnaise, cream and mixed sauce', opts:[['M pack',40],['L pack',60]]},
-  {id:'wings', name:'Spicy Garlic Honey Wings / Thighs', img:'f_wings', story:"Meet your new obsession: Spicy Honey Garlic Wings. We take our extra-crispy, jumbo chicken wings and toss them in a sticky, addictive glaze made from pure local honey, roasted garlic, and a kick of fiery chili. It’s the perfect balance of sweet, savory, and heat that hits just right.", tag:'Hot', cats:['plates','popular'], desc:'Crispy and juicy chicken wings or thighs, garlic honey sauce, spices', opts:[['Wings · 5 pcs',50],['Wings · 10 pcs',105],['Thighs · 6 pcs',45],['Thighs · 10 pcs',100]]},
+  {id:'wings', name:'Spicy Garlic Honey Wings', img:'f_wings', story:"Meet your new obsession: Spicy Honey Garlic Wings. We take our extra-crispy, jumbo chicken wings and toss them in a sticky, addictive glaze made from pure local honey, roasted garlic, and a kick of fiery chili. It’s the perfect balance of sweet, savory, and heat that hits just right.", tag:'Hot', cats:['plates','popular'], desc:'Crispy and juicy chicken wings, garlic honey sauce, spices', opts:[['6 pcs',45],['10 pcs',95]]},
 ];
 const CATS = [
   {id:'popular', label:'Popular', img:'f_chshaw', color:'#C8102E'},
@@ -274,7 +274,7 @@ function renderCats(){
 function renderFood(){
   const list=FOOD.filter(f=>f.cats.includes(curCat));
   $('#foodGrid').innerHTML = list.map((f,i)=>`<article class="fcard" style="animation-delay:${i*70}ms">
-    ${f.img?`<div class="ph"><img src="${IMG[f.img]}" alt="${f.name}" loading="lazy"><span class="tag">${f.tag}</span></div>`:`<div class="ph typo"><span class="tag">${f.tag}</span><b>Wings &amp; thighs</b><span>5 or 10 pieces · garlic honey glaze</span></div>`}
+    ${f.img?`<div class="ph"><img src="${IMG[f.img]}" alt="${f.name}" loading="lazy"><span class="tag">${f.tag}</span></div>`:`<div class="ph typo"><span class="tag">${f.tag}</span><b>Spicy wings</b><span>5 or 10 pieces · garlic honey glaze</span></div>`}
     <h3>${f.name}</h3><p>${f.desc}</p>
     <div class="foot"><span class="price"><small style="margin:0 6px 0 0">${f.opts.length>1?'from':''}</small>${ced(f.opts[0][1])}</span><button class="mini-btn" data-food="${f.id}">Order</button></div></article>`).join('');
   document.querySelectorAll('[data-food]').forEach(b=>b.onclick=()=>openFood(b.dataset.food));
