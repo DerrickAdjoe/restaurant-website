@@ -494,3 +494,4 @@ const secs=['home','story','cravings','pressed','bar','contact'].map(id=>documen
 const navIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ document.querySelectorAll('.nav a.lk').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)); } }),{rootMargin:'-45% 0px -50% 0px'});
 secs.forEach(s=>navIO.observe(s));
 showSlide(0);
+                                                                                             
