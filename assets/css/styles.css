@@ -2791,19 +2791,3 @@ footer {
 .d-refrow input { flex: 1; min-width: 0; }
 .d-gen { flex: none; padding: 0 14px; border-radius: 12px; border: 1.5px solid rgba(242,154,46,.6); background: transparent; color: var(--amber); font: inherit; font-weight: 700; font-size: 13px; cursor: pointer; }
 .d-gen[hidden] { display: none; }
-
-/* ================= ABOUT ================= */
-
-.about-sec { padding: clamp(64px, 9vw, 120px) clamp(20px, 5vw, 72px); background: radial-gradient(70% 60% at 100% 0%, rgba(158,47,69,.20), transparent 70%), #1d2026; color: #fff; }
-.about-wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
-.about-copy h2 { font-family: 'Bodoni Moda', Georgia, serif; font-weight: 500; font-size: clamp(36px, 5vw, 60px); line-height: 1.05; margin: 10px 0 22px; }
-.about-copy p { color: rgba(255,255,255,.78); line-height: 1.75; margin: 0 0 14px; max-width: 560px; }
-.about-copy p b { color: #fff; }
-.about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.about-card { display: block; padding: 18px; border-radius: 18px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.10); color: #fff; text-decoration: none; transition: border-color .2s, transform .2s; }
-a.about-card:hover { border-color: rgba(242,154,46,.6); transform: translateY(-2px); }
-.about-card small { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #f29a2e; margin-bottom: 8px; }
-.about-card b { display: block; font-size: 17px; margin-bottom: 4px; }
-.about-card span { font-size: 13px; color: rgba(255,255,255,.62); }
-@media (max-width: 860px) { .about-wrap { grid-template-columns: 1fr; } }
-@media (max-width: 420px) { .about-cards { grid-template-columns: 1fr; } }
