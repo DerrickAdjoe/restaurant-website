@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Menu · La Viva Lounge</title>
+<meta name="description" content="La Viva Lounge menu: daily servings, cold pressed juices, smoothies, cocktails, mocktails and mojitos. Rowi Junction, Adenta.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1d2026;--card:#262a31;--line:rgba(255,255,255,.12);--text:#fff;--muted:rgba(255,255,255,.62);--amber:#f29a2e;--amber2:#e8742a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(70% 40% at 100% 0%,rgba(158,47,69,.22),transparent 70%),var(--bg);color:var(--text);font-family:Jost,'Segoe UI',Helvetica,sans-serif;padding:max(28px,env(safe-area-inset-top)) 16px 32px}
+.wrap{max-width:760px;margin:0 auto}
+.logo{display:block;width:200px;margin:4px auto 18px}
+h1{font-family:'Bodoni Moda',Georgia,serif;font-weight:500;font-size:32px;text-align:center;margin:0 0 6px}
+.sub{color:var(--muted);text-align:center;margin:0 0 20px;font-size:15px}
+.acts{display:flex;gap:10px;justify-content:center;margin:0 0 22px;flex-wrap:wrap}
+.btn{display:inline-block;text-decoration:none;font-weight:600;font-size:15px;padding:12px 20px;border-radius:999px}
+.btn.amber{color:#fff;background:linear-gradient(90deg,var(--amber),var(--amber2))}
+.btn.ghost{color:#fff;border:1.5px solid var(--line)}
+.pages{display:flex;flex-direction:column;gap:14px}
+.pages a{display:block;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.pages canvas{display:block;width:100%;height:auto}
+.status{color:var(--muted);text-align:center;font-size:14px;margin:10px 0}
+.status a{color:#fff}
+.tip{color:var(--muted);font-size:12px;text-align:center;margin:10px 0 0}
+.foot{text-align:center;color:var(--muted);font-size:14px;line-height:1.8;margin-top:26px}
+.foot a{color:#fff}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <img class="logo" src="../assets/images/logo.webp" alt="La Viva Lounge">
+  <h1>Our Menu</h1>
+  <p class="sub">Good food. Good mood.</p>
+  <div class="acts">
+    <a class="btn amber" href="../#cravings">Order online</a>
+    <a class="btn ghost" href="../pay/">Pay with MoMo</a>
+  </div>
+  <p class="status" id="status">Loading menu…</p>
+  <div class="pages" id="pages"></div>
+  <p class="tip">Tap a page to open the full menu</p>
+  <div class="foot">
+    Rowi Junction, Adenta · opposite Just Freddies<br>
+    WhatsApp orders: <a href="https://wa.me/233544369707">054 436 9707</a> · Calls: <a href="tel:+233206423766">020 642 3766</a><br>
+    @Lavivalounge
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const PDF = '../menu.pdf', box = document.getElementById('pages'), st = document.getElementById('status');
+const fail = () => { st.innerHTML = 'Could not show the menu here. <a href="' + PDF + '">Open the menu</a>'; };
+if (!window.pdfjsLib) fail(); else {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  pdfjsLib.getDocument(PDF).promise.then(async pdf => {
+    st.style.display = 'none';
+    const w = Math.min(box.clientWidth || 760, 760), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const vp1 = page.getViewport({ scale: 1 });
+      const vp = page.getViewport({ scale: (w / vp1.width) * dpr });
+      const a = document.createElement('a'); a.href = PDF; a.target = '_blank'; a.rel = 'noopener';
+      const c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
+      a.appendChild(c); box.appendChild(a);
+      await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+    }
+  }).catch(fail);
+}
+</script>
+</body>
+</html>
