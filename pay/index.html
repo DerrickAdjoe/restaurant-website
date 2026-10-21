@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pay La Viva Lounge</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1d2026;--card:#262a31;--line:rgba(255,255,255,.12);--text:#fff;--muted:rgba(255,255,255,.62);--amber:#f29a2e;--amber2:#e8742a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(70% 50% at 100% 0%,rgba(158,47,69,.22),transparent 70%),var(--bg);color:var(--text);font-family:Jost,'Segoe UI',Helvetica,sans-serif;display:flex;justify-content:center;padding:max(28px,env(safe-area-inset-top)) 18px 28px}
+.wrap{width:100%;max-width:420px}
+.logo{display:block;width:200px;margin:4px auto 18px}
+h1{font-family:'Bodoni Moda',Georgia,serif;font-weight:500;font-size:30px;text-align:center;margin:0 0 6px}
+.sub{color:var(--muted);text-align:center;margin:0 0 22px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
+.field{margin-bottom:14px}
+input{width:100%;font:inherit;font-size:16px;color:var(--text);background:transparent;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;outline:none}
+input:focus{border-color:var(--amber)}
+.amt{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:12px}
+.amt:focus-within{border-color:var(--amber)}
+.amt span{padding:0 4px 0 14px;font-weight:600;color:var(--amber)}
+.amt input{border:0;font-size:22px;font-weight:600;padding:12px 14px 12px 6px}
+.sum{border-top:1px dashed var(--line);margin-top:6px;padding-top:12px;font-size:14px;color:var(--muted)}
+.sum div{display:flex;justify-content:space-between;margin:4px 0}
+.sum .tot{color:var(--text);font-weight:600;font-size:16px}
+button{display:block;width:100%;margin-top:16px;border:0;border-radius:14px;padding:15px;font:inherit;font-weight:600;font-size:16px;color:#fff;background:linear-gradient(90deg,var(--amber),var(--amber2));cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+.note{color:var(--muted);font-size:12px;text-align:center;margin:12px 0 0}
+.msg{min-height:20px;text-align:center;color:var(--amber);font-size:14px;margin-top:12px}
+.rc{display:none;background:#fff;color:#23262d;border-radius:20px;padding:20px;line-height:1.8;font-size:14px}
+.rc .ok{width:48px;height:48px;border-radius:50%;background:#22a855;display:grid;place-items:center;margin:0 auto 6px}
+.rc h2{text-align:center;margin:0 0 10px;font-size:20px}
+.rc .r{display:flex;justify-content:space-between;gap:12px}
+.rc .again{display:block;margin:12px auto 0;background:none;border:0;color:#b5651d;text-decoration:underline;font:inherit;font-size:14px;width:auto;padding:0}
+.home{display:block;text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <img class="logo" src="../assets/images/logo.webp" alt="La Viva Lounge">
+  <h1>Pay La Viva Lounge</h1>
+  <p class="sub">Enter the amount and pay with Mobile Money</p>
+  <div class="card" id="form">
+    <div class="field"><label for="amount">Amount</label>
+      <div class="amt"><span>GH₵</span><input id="amount" type="number" inputmode="decimal" min="1" step="0.01" placeholder="0.00"></div></div>
+    <div class="field"><label for="name">Your name (optional)</label><input id="name" type="text" autocomplete="name"></div>
+    <div class="field"><label for="ref">Table or ticket number (optional)</label><input id="ref" type="text" placeholder="e.g. Table 5 or G-07"></div>
+    <div class="sum">
+      <div><span>Amount</span><span id="sAmt">GH₵ 0.00</span></div>
+      <div><span>Mobile money fee</span><span id="sFee">GH₵ 0.00</span></div>
+      <div class="tot"><span>You pay</span><span id="sTot">GH₵ 0.00</span></div>
+    </div>
+    <button id="payBtn" disabled>Pay with Mobile Money</button>
+    <p class="note">🔒 Secured by Paystack · MTN · Telecel · AirtelTigo</p>
+    <div class="msg" id="msg"></div>
+  </div>
+  <div class="rc" id="rc"></div>
+  <a class="home" href="https://lavivalounge.com">lavivalounge.com</a>
+</main>
+<script>
+const KEY = 'pk_live_102ee2aff4e933b4de3a0caca03ec9711eb1c89d';
+const VERIFY = 'https://laviva-pay.vercel.app/api/verify';
+const FEE = 0.0195;
+const $ = s => document.querySelector(s);
+const c2 = n => 'GH₵ ' + n.toFixed(2);
+const chargeFor = t => Math.ceil((t/(1-FEE)+0.01)*100)/100;
+if (KEY.startsWith('pk_')) { const s=document.createElement('script'); s.src='https://js.paystack.co/v1/inline.js'; document.head.appendChild(s); }
+function update(){
+  const a = parseFloat($('#amount').value) || 0;
+  const ok = a >= 1;
+  const ch = ok ? chargeFor(a) : 0;
+  $('#sAmt').textContent = c2(ok?a:0); $('#sFee').textContent = c2(ok?ch-a:0); $('#sTot').textContent = c2(ch);
+  $('#payBtn').disabled = !ok; $('#payBtn').textContent = ok ? 'Pay ' + c2(ch) + ' with Mobile Money' : 'Pay with Mobile Money';
+}
+$('#amount').addEventListener('input', update);
+function receipt(p){
+  $('#form').style.display='none';
+  const rc=$('#rc'); rc.style.display='block';
+  rc.innerHTML = `<div class="ok"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg></div>
+  <h2>Payment successful</h2>
+  <div class="r"><span>Receipt</span><b>${p.ref}</b></div>
+  <div class="r"><span>Amount</span><b>${c2(p.amount)}</b></div>
+  <div class="r"><span>Mobile money fee</span><b>${c2(p.charge-p.amount)}</b></div>
+  <div class="r"><span>Total paid</span><b>${c2(p.charge)}</b></div>
+  ${p.name?`<div class="r"><span>Name</span><b>${p.name}</b></div>`:''}
+  ${p.tref?`<div class="r"><span>Table / ticket</span><b>${p.tref}</b></div>`:''}
+  <div class="r"><span>Date</span><b>${p.when}</b></div>
+  <p style="text-align:center;margin:10px 0 0;font-size:13px;color:#555">Please show this screen to our staff.</p>
+  <button class="again" onclick="location.reload()">Make another payment</button>`;
+}
+$('#payBtn').addEventListener('click', () => {
+  const amount = parseFloat($('#amount').value) || 0;
+  if (amount < 1) return;
+  if (!window.PaystackPop){ $('#msg').textContent='Payment is still loading. Try again in a moment.'; return; }
+  const charge = chargeFor(amount);
+  const name = $('#name').value.trim(), tref = $('#ref').value.trim();
+  const ref = 'LV-' + Date.now().toString(36).slice(-5).toUpperCase() + Math.random().toString(36).slice(2,4).toUpperCase();
+  $('#msg').textContent='';
+  PaystackPop.setup({
+    key: KEY, email: 'orders+' + ref.toLowerCase() + '@lavivalounge.com',
+    amount: Math.round(charge*100), currency: 'GHS', ref: ref, channels: ['mobile_money','card'],
+    metadata: { custom_fields: [
+      { display_name:'Source', variable_name:'source', value:'Counter QR' },
+      { display_name:'Name', variable_name:'name', value: name || '-' },
+      { display_name:'Table / ticket', variable_name:'table_ticket', value: tref || '-' },
+      { display_name:'Amount before fee', variable_name:'amount_before_fee', value: c2(amount) } ] },
+    callback: function(r){
+      const rf = (r && r.reference) || ref;
+      const when = new Date().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+      const done = () => receipt({ref:rf, amount, charge, name, tref, when});
+      $('#msg').textContent = 'Confirming your payment…';
+      fetch(VERIFY + '?reference=' + encodeURIComponent(rf), {cache:'no-store'})
+        .then(x => x.json())
+        .then(v => (v && v.paid && v.amount === Math.round(charge*100)) ? done()
+              : ($('#msg').textContent = `We couldn't confirm payment ${rf} yet. Please show this number to our staff.`))
+        .catch(() => $('#msg').textContent = `We couldn't confirm payment ${rf} yet. Please show this number to our staff.`);
+    },
+    onClose: function(){ $('#msg').textContent = 'Payment not completed.'; }
+  }).openIframe();
+});
+update();
+</script>
+</body>
+</html>
