@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>La Viva · Kitchen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;1,500&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1d2026;--col:#16181d;--card:#262a31;--line:rgba(255,255,255,.10);--text:#fff;--muted:rgba(255,255,255,.6);--amber:#f29a2e;--amber2:#e8742a;--sun:#ffe066;--green:#22a855;--red:#ef5350;--new:#ff8a7a;--ok:#5fd38b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Jost,'Segoe UI',Helvetica,sans-serif}
+button,input{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+[hidden]{display:none !important}
+.wrap{height:100vh;height:100dvh;display:flex;flex-direction:column;padding:16px}
+.head{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.brand{font-family:'Bodoni Moda',Georgia,serif;font-size:28px}
+.sp{flex:1}
+.clock{font-weight:700;font-size:26px;color:var(--sun)}
+.pill{font-size:14px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted)}
+.pill.warn{border-color:var(--amber);color:var(--amber)}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--green)}.dot.off{background:var(--red)}
+.cols{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;min-height:0}
+.col{background:var(--col);border-radius:18px;padding:12px;display:flex;flex-direction:column;min-height:0}
+.col h2{margin:2px 4px 10px;font-size:17px;letter-spacing:.14em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.col h2 i{font-style:normal;background:#2c3038;border-radius:999px;padding:2px 12px;font-size:16px;letter-spacing:0}
+.c-new h2{color:var(--new)}.c-prep h2{color:var(--sun)}.c-ready h2{color:var(--ok)}
+.list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:2px}
+.empty{color:var(--muted);text-align:center;margin-top:30px}
+.card{background:var(--card);border-radius:16px;padding:14px;border-left:7px solid var(--new);animation:pop .35s ease}
+.c-prep .card{border-left-color:var(--sun)}.c-ready .card{border-left-color:var(--ok)}
+.card.late{box-shadow:0 0 0 2px var(--red) inset}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+.ch{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ch b{font-size:30px;font-weight:700;line-height:1}
+.ch span{font-size:15px;color:var(--muted);white-space:nowrap}
+.ch span.t{color:var(--sun);font-weight:700}
+.card.late .ch span{color:var(--red);font-weight:700}
+.who{font-size:16px;color:rgba(255,255,255,.8);margin:6px 0 8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.04em}
+.tag.paid{background:#1f5132;color:#7ee2a2}.tag.unpaid{background:#4a2323;color:#ffaaa0}.tag.web{background:#3a2f1c;color:#ffcf7a}.tag.cash{background:#2b3346;color:#9fbaff}
+.items{list-style:none;margin:0 0 12px;padding:0;font-size:18px;line-height:1.45}
+.items em{display:block;font-style:italic;color:var(--sun);font-size:15px}
+.items small{color:var(--muted);font-size:14px}
+.loc{font-size:14px;color:var(--muted);margin:-6px 0 10px}
+.btns{display:flex;gap:8px}
+.btns button{flex:1;padding:14px 0;border-radius:12px;font-weight:700;font-size:17px;background:#2f343d}
+.btns .go{background:linear-gradient(90deg,var(--amber),var(--amber2))}
+.btns .ok{background:var(--green)}
+.btns .x{flex:none;width:52px;background:#2a2d33;color:var(--muted)}
+.overlay{position:fixed;inset:0;background:radial-gradient(70% 50% at 100% 0%,rgba(158,47,69,.22),transparent 70%),var(--bg);display:flex;align-items:center;justify-content:center;z-index:40;padding:20px}
+.box{background:var(--card);border-radius:20px;padding:24px;width:min(420px,100%);text-align:center}
+.box img{width:190px;display:block;margin:0 auto 10px}
+.box h3{margin:0 0 6px;font-size:22px}
+.in{width:100%;margin-top:10px;background:transparent;border:1.5px solid rgba(255,255,255,.15);border-radius:12px;padding:13px 14px;font-size:16px;outline:none;text-align:left}
+.in:focus{border-color:var(--amber)}
+.big{width:100%;margin-top:14px;padding:15px;border-radius:12px;background:linear-gradient(90deg,var(--amber),var(--amber2));font-weight:700;font-size:17px}
+.err{color:var(--red);font-size:14px;min-height:18px;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#fff;color:#1d2026;padding:14px 22px;border-radius:14px;font-weight:600;opacity:0;transition:.25s;z-index:30}
+.toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="overlay" id="login" hidden>
+  <div class="box">
+    <img src="../assets/images/logo.webp" alt="La Viva Lounge">
+    <h3>Kitchen sign in</h3>
+    <input class="in" id="lEmail" type="email" value="staff@lavivalounge.com" autocomplete="username">
+    <input class="in" id="lPass" type="password" placeholder="Password" autocomplete="current-password">
+    <button class="big" id="lBtn">Sign in</button>
+    <div class="err" id="lErr"></div>
+  </div>
+</div>
+<div class="overlay" id="start" hidden>
+  <div class="box">
+    <img src="../assets/images/logo.webp" alt="La Viva Lounge">
+    <h3>Kitchen screen</h3>
+    <p style="color:var(--muted);margin:0">Tap once to start, so new orders can play a sound.</p>
+    <button class="big" id="goBtn">Start kitchen screen</button>
+  </div>
+</div>
+<div class="wrap">
+  <div class="head">
+    <div class="brand">Kitchen</div>
+    <span class="dot" id="dot" title="Live connection"></span>
+    <div class="sp"></div>
+    <button class="pill" id="fsBtn">Full screen</button>
+    <button class="pill" id="sndBtn">Sound on</button>
+    <div class="clock" id="clock">--:--</div>
+  </div>
+  <div class="cols">
+    <section class="col c-new"><h2>New <i id="nNew">0</i></h2><div class="list" id="lNew"></div></section>
+    <section class="col c-prep"><h2>Preparing <i id="nPrep">0</i></h2><div class="list" id="lPrep"></div></section>
+    <section class="col c-ready"><h2>Ready <i id="nReady">0</i></h2><div class="list" id="lReady"></div></section>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://znxakuzpofjspahvdacf.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_8G2xLZjBp3dww4J4Kz1m5A_8GXPVudw';
+const LATE_NEW_MIN = 5;
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = s => document.querySelector(s);
+let orders = new Map(), soundOn = true, audio = null, live = false, started = false;
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('show'),2500); }
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mins = t => Math.max(0, Math.floor((Date.now() - new Date(t).getTime()) / 60000));
+function beep(){
+  if (!soundOn || !audio) return;
+  const t = audio.currentTime;
+  [0, .18, .36].forEach((d, i) => { const o = audio.createOscillator(), g = audio.createGain();
+    o.type = 'sine'; o.frequency.value = i === 2 ? 1175 : 880; o.connect(g); g.connect(audio.destination);
+    g.gain.setValueAtTime(.0001, t + d); g.gain.exponentialRampToValueAtTime(.35, t + d + .02); g.gain.exponentialRampToValueAtTime(.0001, t + d + .16);
+    o.start(t + d); o.stop(t + d + .18); });
+}
+$('#sndBtn').onclick = () => { soundOn = !soundOn; $('#sndBtn').textContent = soundOn ? 'Sound on' : 'Sound off'; $('#sndBtn').classList.toggle('warn', !soundOn); if (soundOn) beep(); };
+$('#fsBtn').onclick = () => { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); };
+function card(o){
+  const items = (o.items || []).map(i => `<li>${i.qty} × ${esc(i.name)}${i.detail ? ` <small>(${esc(i.detail)})</small>` : ''}${i.note ? `<em>${esc(i.note)}</em>` : ''}</li>`).join('');
+  const src = o.source === 'website' ? '<span class="tag web">WEBSITE</span>' : '<span class="tag cash">CASHIER</span>';
+  const pay = o.paid ? '<span class="tag paid">PAID</span>' : '<span class="tag unpaid">NOT PAID</span>';
+  let time = '', late = false, btns = '';
+  if (o.status === 'new') {
+    const w = mins(o.created_at); late = w >= LATE_NEW_MIN; time = w < 1 ? 'now' : w + ' min';
+    btns = `<button class="go" data-a="start" data-id="${o.id}" data-eta="10">Start · 10 min</button><button data-a="start" data-id="${o.id}" data-eta="15">15</button><button data-a="start" data-id="${o.id}" data-eta="20">20</button><button class="x" data-a="cancel" data-id="${o.id}" title="Cancel">✕</button>`;
+  } else if (o.status === 'preparing') {
+    const left = (o.eta_minutes || 10) - mins(o.started_at || o.created_at); late = left < 0;
+    time = `<span class="t">${left >= 0 ? left + ' min left' : Math.abs(left) + ' min over'}</span>`;
+    btns = `<button class="ok" data-a="ready" data-id="${o.id}">Ready</button>`;
+  } else {
+    const r = mins(o.ready_at || o.updated_at); time = r < 1 ? 'just now' : r + ' min ago';
+    btns = `<button data-a="done" data-id="${o.id}">Served / collected</button>`;
+  }
+  return `<div class="card ${late ? 'late' : ''}">
+    <div class="ch"><b>${esc(o.label)}</b><span>${time}</span></div>
+    <div class="who">${esc(o.first_name)} · ${esc(o.order_type)} ${src} ${pay}</div>
+    ${o.location ? `<div class="loc">📍 ${esc(o.location)}</div>` : ''}
+    <ul class="items">${items}</ul>
+    <div class="btns">${btns}</div></div>`;
+}
+function render(){
+  const all = [...orders.values()];
+  const by = s => all.filter(o => o.status === s).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  const fill = (el, n, list, empty) => { $(el).innerHTML = list.length ? list.map(card).join('') : `<p class="empty">${empty}</p>`; $(n).textContent = list.length; };
+  fill('#lNew', '#nNew', by('new'), 'No new orders');
+  fill('#lPrep', '#nPrep', by('preparing'), 'Nothing cooking');
+  fill('#lReady', '#nReady', by('ready').reverse(), 'Nothing waiting');
+  document.querySelectorAll('[data-a]').forEach(b => b.onclick = () => act(b.dataset.a, +b.dataset.id, +b.dataset.eta));
+}
+async function act(a, id, eta){
+  const now = new Date().toISOString();
+  let patch;
+  if (a === 'start') patch = { status: 'preparing', eta_minutes: eta || 10, started_at: now };
+  else if (a === 'ready') patch = { status: 'ready', ready_at: now };
+  else if (a === 'done') patch = { status: 'done' };
+  else if (a === 'cancel') { if (!confirm('Cancel this order?')) return; patch = { status: 'cancelled' }; }
+  const o = orders.get(id); if (o) { Object.assign(o, patch); if (['done','cancelled'].includes(o.status)) orders.delete(id); render(); }
+  const { error } = await db.from('orders').update(patch).eq('id', id);
+  if (error) { toast('Could not update. Check the internet.'); load(); }
+}
+async function load(){
+  const since = new Date(Date.now() - 12 * 3600 * 1000).toISOString();
+  const { data, error } = await db.from('orders').select('*').in('status', ['new','preparing','ready']).gte('created_at', since).order('created_at');
+  if (error) { $('#dot').classList.add('off'); return; }
+  const before = new Set(orders.keys());
+  orders = new Map(data.map(o => [o.id, o]));
+  if (started && data.some(o => o.status === 'new' && !before.has(o.id)) && before.size) beep();
+  render();
+}
+function subscribe(){
+  db.channel('kitchen-orders')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, p => {
+      const o = p.new;
+      if (p.eventType === 'INSERT' && o.status === 'new') { orders.set(o.id, o); beep(); toast('New order: ' + o.label); }
+      else if (o && ['new','preparing','ready'].includes(o.status)) orders.set(o.id, o);
+      else if (o) orders.delete(o.id);
+      render();
+    })
+    .subscribe(s => { live = s === 'SUBSCRIBED'; $('#dot').classList.toggle('off', !live); });
+}
+async function boot(){
+  const { data } = await db.auth.getSession();
+  if (!data.session) { $('#login').hidden = false; return; }
+  $('#login').hidden = true; $('#start').hidden = false;
+}
+$('#lBtn').onclick = async () => {
+  $('#lErr').textContent = '';
+  const { error } = await db.auth.signInWithPassword({ email: $('#lEmail').value.trim(), password: $('#lPass').value });
+  if (error) { $('#lErr').textContent = 'Wrong email or password.'; return; }
+  boot();
+};
+$('#lPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('#lBtn').click(); });
+$('#goBtn').onclick = () => {
+  try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+  started = true; $('#start').hidden = true; beep();
+  load(); subscribe();
+  setInterval(load, 20000);
+  setInterval(render, 15000);
+};
+setInterval(() => { const d = new Date(); $('#clock').textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }, 1000);
+addEventListener('online', load);
+boot();
+</script>
+</body>
+</html>
