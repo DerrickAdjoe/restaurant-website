@@ -81,14 +81,21 @@ function chime(){
     g.gain.setValueAtTime(.0001, t + d); g.gain.exponentialRampToValueAtTime(.4, t + d + .03); g.gain.exponentialRampToValueAtTime(.0001, t + d + .5);
     o.start(t + d); o.stop(t + d + .55); });
 }
+/* What customers see, by order type:
+   Dine in: big table number + name. Takeout: big ticket + name. Online: big name only (never the phone number). */
+function who(r){
+  if (r.order_type === 'Online') return `<b>${esc(r.first_name)}</b><span>Online order</span>`;
+  if (r.order_type === 'Takeout') return `<b>${esc(r.label)}</b><span>${esc(r.first_name)} · Takeout</span>`;
+  return `<b>${esc(r.label)}</b><span>${esc(r.first_name)}</span>`;
+}
 function render(){
   const prep = rows.filter(r => r.status === 'preparing').sort((a, b) => new Date(a.started_at || a.updated_at) - new Date(b.started_at || b.updated_at));
   const ready = rows.filter(r => r.status === 'ready').sort((a, b) => new Date(b.ready_at || b.updated_at) - new Date(a.ready_at || a.updated_at));
   const left = r => { const l = (r.eta_minutes || 10) - mins(r.started_at || r.updated_at); return l > 1 ? '~' + l + ' min' : 'Almost ready'; };
-  $('#prep').innerHTML = prep.length ? prep.slice(0, MAX_PREP).map(r => `<div class="item"><div class="l"><b>${esc(r.label)}</b><span>${esc(r.first_name)}</span></div><em>${left(r)}</em></div>`).join('')
+  $('#prep').innerHTML = prep.length ? prep.slice(0, MAX_PREP).map(r => `<div class="item"><div class="l">${who(r)}</div><em>${left(r)}</em></div>`).join('')
     + (prep.length > MAX_PREP ? `<div class="more">+ ${prep.length - MAX_PREP} more being prepared</div>` : '') : '<p class="empty">No orders being prepared</p>';
   const fresh = r => mins(r.ready_at || r.updated_at) < 1;
-  $('#ready').innerHTML = ready.length ? ready.slice(0, MAX_READY).map(r => `<div class="item ${fresh(r) ? 'fresh' : ''}"><div class="l"><b>${esc(r.label)}</b><span>${esc(r.first_name)}</span></div><em>Ready!</em></div>`).join('')
+  $('#ready').innerHTML = ready.length ? ready.slice(0, MAX_READY).map(r => `<div class="item ${fresh(r) ? 'fresh' : ''}"><div class="l">${who(r)}</div><em>Ready!</em></div>`).join('')
     + (ready.length > MAX_READY ? `<div class="more">+ ${ready.length - MAX_READY} more ready</div>` : '') : '<p class="empty">Ready orders appear here</p>';
 }
 async function load(){
