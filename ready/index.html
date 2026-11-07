@@ -125,7 +125,7 @@ function render(){
 }
 /* Voice choice: prefers West African English voices when the device has them */
 const VOICE_KEY = 'laviva-voice';
-const PREF = [/en[-_]GH/i, /en[-_]NG/i, /en[-_](KE|TZ|ZA)/i, /en[-_]GB/i, /^en/i];
+const PREF = [/en[-_]GB/i, /en[-_]GH/i, /en[-_](IE|AU)/i, /^en/i];
 function englishVoices(){ try { return speechSynthesis.getVoices().filter(x => /^en/i.test(x.lang)); } catch (e) { return []; } }
 function pickVoice(){
   const list = englishVoices(); let saved = null; try { saved = localStorage.getItem(VOICE_KEY); } catch (e) {}
