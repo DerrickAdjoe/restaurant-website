@@ -422,7 +422,7 @@ function renderCart(){
       const charge=chargeFor(tot), fee=+(charge-tot).toFixed(2);
       payBtn.disabled=false; payBtn.textContent=`Pay ${ced2(charge)} with Mobile Money`;
       $('#dSecure').textContent=`Includes ${ced2(fee)} mobile money fee. Secure payment: MTN, Telecel, AirtelTigo. Your order is sent to WhatsApp after payment.`;
-      payBtn.onclick=()=>startPay({msg,total:tot,charge,fee,mode:mode==='Online'?'Online '+fulfil:mode,refVal:ref,name,lines});
+      payBtn.onclick=()=>startPay({msg,total:tot,charge,fee,mode:mode==='Online'?'Online '+fulfil:mode,refVal:ref,name,lines,order:{type:mode,fulfil:mode==='Online'?fulfil:'',ref,loc:needLoc?loc:'',total:tot,items:cart.map(c=>({name:c.name,detail:c.det,qty:c.qty,price:c.price}))}});
     } else {
       wa.href='https://wa.me/233544369707?text='+encodeURIComponent(msg); wa.setAttribute('aria-disabled','false');
     }
@@ -440,7 +440,8 @@ function startPay(o){
     metadata: { custom_fields: [
       { display_name:'Name', variable_name:'name', value:o.name },
       { display_name:'Order type', variable_name:'order_type', value:o.mode+' · '+o.refVal },
-      { display_name:'Items', variable_name:'items', value:o.lines.join('; ') } ] },
+      { display_name:'Items', variable_name:'items', value:o.lines.join('; ') },
+      { display_name:'Order data', variable_name:'order', value:JSON.stringify(o.order||{}) } ] },
     callback: function(r){
       const when=new Date().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
       const rf=(r && r.reference) || ref;
