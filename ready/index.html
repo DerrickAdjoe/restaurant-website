@@ -50,6 +50,9 @@ button{font:inherit;color:inherit;cursor:pointer;border:0}
 .start img{width:260px}
 .start button{padding:18px 34px;border-radius:14px;background:linear-gradient(90deg,var(--amber),var(--amber2));font-weight:700;font-size:20px}
 .start p{color:var(--muted);margin:0}
+.vpick{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;color:var(--muted);font-size:15px}
+.vpick select{background:#262a31;color:#fff;border:1.5px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 12px;font:inherit;max-width:70vw}
+.vpick button{padding:10px 16px;border-radius:10px;background:#2f343d;color:#fff;font-weight:600}
 </style>
 </head>
 <body>
@@ -57,6 +60,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0}
   <img src="../assets/images/logo.webp" alt="La Viva Lounge">
   <button id="go" autofocus>Start customer screen</button>
   <p>Press once (or OK on the remote) so the "Ready" chime can play.</p>
+  <div class="vpick"><label for="voiceSel">Announcement voice</label><select id="voiceSel"></select><button type="button" id="voiceTest">Test voice</button></div>
 </div>
 <div class="wrap">
   <div class="head">
@@ -119,6 +123,25 @@ function render(){
   fill('#dine', rows.filter(r => r.order_type === 'Dine in'), 'Dine-in orders appear here');
   fill('#take', rows.filter(r => r.order_type !== 'Dine in'), 'Takeout and online orders appear here');
 }
+/* Voice choice: prefers West African English voices when the device has them */
+const VOICE_KEY = 'laviva-voice';
+const PREF = [/en[-_]GH/i, /en[-_]NG/i, /en[-_](KE|TZ|ZA)/i, /en[-_]GB/i, /^en/i];
+function englishVoices(){ try { return speechSynthesis.getVoices().filter(x => /^en/i.test(x.lang)); } catch (e) { return []; } }
+function pickVoice(){
+  const list = englishVoices(); let saved = null; try { saved = localStorage.getItem(VOICE_KEY); } catch (e) {}
+  const chosen = list.find(x => x.name === saved); if (chosen) return chosen;
+  for (const re of PREF) { const m = list.find(x => re.test(x.lang)); if (m) return m; }
+  return null;
+}
+function fillVoices(){
+  const sel = document.getElementById('voiceSel'); if (!sel) return;
+  const list = englishVoices(), cur = pickVoice();
+  sel.innerHTML = list.length ? list.map(x => `<option value="${x.name}" ${cur && cur.name === x.name ? 'selected' : ''}>${x.name} (${x.lang})</option>`).join('') : '<option>Default voice</option>';
+}
+try { speechSynthesis.onvoiceschanged = fillVoices; } catch (e) {}
+setTimeout(fillVoices, 300);
+document.addEventListener('change', e => { if (e.target.id === 'voiceSel') { try { localStorage.setItem(VOICE_KEY, e.target.value); } catch (er) {} } });
+document.addEventListener('click', e => { if (e.target.id === 'voiceTest') { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance('Table 5, Ama, your order is ready.'); const v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; } u.rate = .92; speechSynthesis.speak(u); } catch (er) {} } });
 /* Spoken announcement when an order turns Ready */
 function sayLabel(l){ return String(l || '').replace(/-/g, ' ').replace(/0(\d)/g, ' zero $1'); }
 function speech(r){
@@ -128,7 +151,7 @@ function speech(r){
 }
 function announce(list){
   if (!('speechSynthesis' in window) || !list.length) return;
-  const voices = speechSynthesis.getVoices(), v = voices.find(x => /en[-_](GB|US|GH|NG)/i.test(x.lang)) || voices.find(x => /^en/i.test(x.lang));
+  const v = pickVoice();
   list.forEach(r => [0, 1].forEach(() => { const u = new SpeechSynthesisUtterance(speech(r)); if (v) u.voice = v; u.rate = .92; u.pitch = 1; u.volume = 1; speechSynthesis.speak(u); }));
 }
 async function load(){
