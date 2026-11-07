@@ -119,17 +119,31 @@ function render(){
   fill('#dine', rows.filter(r => r.order_type === 'Dine in'), 'Dine-in orders appear here');
   fill('#take', rows.filter(r => r.order_type !== 'Dine in'), 'Takeout and online orders appear here');
 }
+/* Spoken announcement when an order turns Ready */
+function sayLabel(l){ return String(l || '').replace(/-/g, ' ').replace(/0(\d)/g, ' zero $1'); }
+function speech(r){
+  if (r.order_type === 'Online') return `${r.first_name}, your online order is ready.`;
+  if (r.order_type === 'Takeout') return `Ticket ${sayLabel(r.label)}, ${r.first_name}, your order is ready.`;
+  return `${r.label}, ${r.first_name}, your order is ready.`;
+}
+function announce(list){
+  if (!('speechSynthesis' in window) || !list.length) return;
+  const voices = speechSynthesis.getVoices(), v = voices.find(x => /en[-_](GB|US|GH|NG)/i.test(x.lang)) || voices.find(x => /^en/i.test(x.lang));
+  list.forEach(r => [0, 1].forEach(() => { const u = new SpeechSynthesisUtterance(speech(r)); if (v) u.voice = v; u.rate = .92; u.pitch = 1; u.volume = 1; speechSynthesis.speak(u); }));
+}
 async function load(){
   const { data, error } = await db.from('ready_board').select('*');
   if (error || !data) return;
   rows = data;
   const ids = new Set(data.filter(r => r.status === 'ready').map(r => r.id));
-  if (seenReady && [...ids].some(id => !seenReady.has(id))) chime();
+  const fresh = seenReady ? data.filter(r => r.status === 'ready' && !seenReady.has(r.id)) : [];
+  if (fresh.length) { chime(); setTimeout(() => announce(fresh), 1300); }
   seenReady = ids;
   render();
 }
 $('#go').onclick = () => {
   try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+  try { const w = new SpeechSynthesisUtterance(' '); w.volume = 0; speechSynthesis.speak(w); } catch (e) {}
   $('#start').hidden = true; document.documentElement.requestFullscreen?.().catch(() => {});
   load(); setInterval(load, 4000); setInterval(render, 15000);
 };
