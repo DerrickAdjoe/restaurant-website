@@ -125,12 +125,13 @@ function render(){
 }
 /* Voice choice: prefers West African English voices when the device has them */
 const VOICE_KEY = 'laviva-voice';
-const PREF = [/en[-_]GB/i, /en[-_]GH/i, /en[-_](IE|AU)/i, /^en/i];
+const FEMALE_GB = /Sonia|Libby|Maisie|Serena|Kate|Martha|Stephanie|Google UK English Female|Hazel|Susan/i;
+const PREF = [FEMALE_GB, /en[-_]GB/i, /en[-_]GH/i, /^en/i];
 function englishVoices(){ try { return speechSynthesis.getVoices().filter(x => /^en/i.test(x.lang)); } catch (e) { return []; } }
 function pickVoice(){
   const list = englishVoices(); let saved = null; try { saved = localStorage.getItem(VOICE_KEY); } catch (e) {}
   const chosen = list.find(x => x.name === saved); if (chosen) return chosen;
-  for (const re of PREF) { const m = list.find(x => re.test(x.lang)); if (m) return m; }
+  for (const re of PREF) { const m = list.find(x => re === FEMALE_GB ? (re.test(x.name) && /en[-_]GB/i.test(x.lang)) : re.test(x.lang)); if (m) return m; }
   return null;
 }
 function fillVoices(){
@@ -141,7 +142,7 @@ function fillVoices(){
 try { speechSynthesis.onvoiceschanged = fillVoices; } catch (e) {}
 setTimeout(fillVoices, 300);
 document.addEventListener('change', e => { if (e.target.id === 'voiceSel') { try { localStorage.setItem(VOICE_KEY, e.target.value); } catch (er) {} } });
-document.addEventListener('click', e => { if (e.target.id === 'voiceTest') { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance('Table 5, Ama, your order is ready.'); const v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; } u.rate = .92; speechSynthesis.speak(u); } catch (er) {} } });
+document.addEventListener('click', e => { if (e.target.id === 'voiceTest') { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance('Table 5, Ama, your order is ready.'); const v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; } u.rate = .9; speechSynthesis.speak(u); } catch (er) {} } });
 /* Spoken announcement when an order turns Ready */
 function sayLabel(l){ return String(l || '').replace(/-/g, ' ').replace(/0(\d)/g, ' zero $1'); }
 function speech(r){
@@ -152,7 +153,7 @@ function speech(r){
 function announce(list){
   if (!('speechSynthesis' in window) || !list.length) return;
   const v = pickVoice();
-  list.forEach(r => [0, 1].forEach(() => { const u = new SpeechSynthesisUtterance(speech(r)); if (v) u.voice = v; u.rate = .92; u.pitch = 1; u.volume = 1; speechSynthesis.speak(u); }));
+  list.forEach(r => [0, 1].forEach(() => { const u = new SpeechSynthesisUtterance(speech(r)); if (v) u.voice = v; u.rate = .9; u.pitch = 0.88; u.volume = 1; speechSynthesis.speak(u); }));
 }
 async function load(){
   const { data, error } = await db.from('ready_board').select('*');
