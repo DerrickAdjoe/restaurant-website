@@ -142,13 +142,13 @@ function fillVoices(){
 try { speechSynthesis.onvoiceschanged = fillVoices; } catch (e) {}
 setTimeout(fillVoices, 300);
 document.addEventListener('change', e => { if (e.target.id === 'voiceSel') { try { localStorage.setItem(VOICE_KEY, e.target.value); } catch (er) {} } });
-document.addEventListener('click', e => { if (e.target.id === 'voiceTest') { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance('Table 5, Ama, your order is ready.'); const v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; } u.rate = .9; speechSynthesis.speak(u); } catch (er) {} } });
+document.addEventListener('click', e => { if (e.target.id === 'voiceTest') { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance('Table 5 is ready.'); const v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; } u.rate = .9; speechSynthesis.speak(u); } catch (er) {} } });
 /* Spoken announcement when an order turns Ready */
 function sayLabel(l){ return String(l || '').replace(/-/g, ' ').replace(/0(\d)/g, ' zero $1'); }
 function speech(r){
-  if (r.order_type === 'Online') return `${r.first_name}, your online order is ready.`;
-  if (r.order_type === 'Takeout') return `Ticket ${sayLabel(r.label)}, ${r.first_name}, your order is ready.`;
-  return `${r.label}, ${r.first_name}, your order is ready.`;
+  if (r.order_type === 'Online') return `${r.first_name} is ready.`;
+  if (r.order_type === 'Takeout') return `Ticket ${sayLabel(r.label)} is ready.`;
+  return `${r.label} is ready.`;
 }
 function announce(list){
   if (!('speechSynthesis' in window) || !list.length) return;
