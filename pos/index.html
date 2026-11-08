@@ -193,6 +193,9 @@ button{cursor:pointer;border:0;background:none}
 .tick{z-index:70}
 .vrep{padding:0;overflow:hidden}
 .vrep iframe{display:block;width:100%;height:100%;border:0;background:var(--bg)}
+.ownlock{height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
+.ownlock[hidden],#repFrame[hidden]{display:none !important}
+.osub{color:var(--muted);margin:-10px 0 16px;font-size:14px}
 </style>
 </head>
 <body>
@@ -255,7 +258,19 @@ button{cursor:pointer;border:0;background:none}
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<section class="view vrep" id="vReports" hidden><iframe id="repFrame" title="Reports"></iframe></section>
+<section class="view vrep" id="vReports" hidden>
+  <div class="ownlock" id="ownLock"><div class="pinbox">
+    <h3 id="ownTitle">Owner PIN</h3><p class="osub">Reports are for the owner or manager only.</p>
+    <div class="dots" id="ownDots"><i></i><i></i><i></i><i></i></div>
+    <div class="pmsg" id="ownMsg"></div>
+    <div class="keys" id="ownKeys">
+      <button>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button>9</button>
+      <button class="kx" data-k="clear">Clear</button><button>0</button><button class="kx" data-k="back">⌫</button>
+    </div>
+    <div class="plinks"><button id="ownChange">Change owner PIN</button><button id="ownForgot">Forgot? Sign out</button></div>
+  </div></div>
+  <iframe id="repFrame" title="Reports" hidden></iframe>
+</section>
 <section class="view" id="vOpen" hidden><h2>Open orders</h2><p class="vs">Today's unpaid orders. When a customer pays, tap how they paid.</p><div class="olist" id="openList"></div></section>
 <section class="view" id="vPays" hidden>
   <div class="ph"><div><h2>Payments today</h2><p class="vs">Every payment confirmed today: at the counter and through Paystack (pay QR and website).</p></div><button class="till" id="tillBtn">Close till</button></div>
@@ -375,7 +390,7 @@ function showView(v){
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.v === v));
   document.querySelector('.app').style.display = v === 'order' ? '' : 'none';
   $('#vOpen').hidden = v !== 'open'; $('#vPays').hidden = v !== 'pays'; $('#vReports').hidden = v !== 'reports';
-  if (v === 'reports') { const fr = $('#repFrame'); if (!fr.getAttribute('src')) fr.src = '../reports/'; else try { fr.contentWindow.document.getElementById('reload').click(); } catch (e) {} }
+  if (v === 'reports') ownOpen(); else ownRelock();
   if (v === 'pays') { unseenPays = 0; renderPays(); }
 }
 document.querySelectorAll('.tab').forEach(t => t.onclick = () => showView(t.dataset.v));
@@ -537,7 +552,7 @@ function pinShow(mode, msg){
   $('#pinTitle').textContent = { unlock: 'Enter cashier PIN', set: 'Set a 4-digit cashier PIN', confirm: 'Enter the new PIN again', old: 'Enter the current PIN' }[mode];
   $('#pinMsg').textContent = msg || ''; $('#pinChange').hidden = mode !== 'unlock'; $('#pinLock').hidden = false;
 }
-function lockNow(){ if ($('#login').style.display === 'flex') return; savedPin() ? pinShow('unlock') : pinShow('set', 'First time: choose a PIN for this iPad'); }
+function lockNow(){ try { ownRelock(); if (view === 'reports') showView('order'); } catch (e) {} if ($('#login').style.display === 'flex') return; savedPin() ? pinShow('unlock') : pinShow('set', 'First time: choose a PIN for this iPad'); }
 function pinBad(msg){ const d = $('#pinDots'); d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake'); pinEntry = ''; pinDraw(); $('#pinMsg').textContent = msg; }
 async function pinDone(){
   const h = await pinHash(pinEntry);
@@ -566,6 +581,46 @@ $('#lockBtn').onclick = lockNow;
 function resetIdle(){ clearTimeout(idleT); idleT = setTimeout(() => { if ($('#pinLock').hidden) lockNow(); }, IDLE_MIN * 60000); }
 ['touchstart', 'click', 'keydown'].forEach(e => document.addEventListener(e, () => { if ($('#pinLock').hidden) resetIdle(); }, { passive: true }));
 function pinBoot(){ if (pinBooted) return; pinBooted = true; lockNow(); }
+
+/* ---------- owner PIN for the Reports tab ---------- */
+const OWN_KEY = 'laviva-owner-pin';
+let ownMode = 'unlock', ownEntry = '', ownFirst = '', ownOk = false, ownFails = 0, ownBlock = 0;
+const ownSaved = () => { try { return localStorage.getItem(OWN_KEY); } catch (e) { return null; } };
+function ownDraw(){ document.querySelectorAll('#ownDots i').forEach((d, i) => d.classList.toggle('on', i < ownEntry.length)); }
+function ownShow(mode, msg){
+  ownMode = mode; ownEntry = ''; ownDraw();
+  $('#ownTitle').textContent = { unlock: 'Owner PIN', set: 'Set a 4-digit owner PIN', confirm: 'Enter the owner PIN again', old: 'Enter the current owner PIN' }[mode];
+  $('#ownMsg').textContent = msg || ''; $('#ownChange').hidden = mode !== 'unlock';
+  $('#ownLock').hidden = false; $('#repFrame').hidden = true;
+}
+function ownLoad(){
+  ownOk = true; $('#ownLock').hidden = true; const fr = $('#repFrame'); fr.hidden = false;
+  if (!fr.getAttribute('src')) fr.src = '../reports/'; else try { fr.contentWindow.document.getElementById('reload').click(); } catch (e) {}
+}
+function ownOpen(){ if (ownOk) return ownLoad(); ownSaved() ? ownShow('unlock') : ownShow('set', 'First time: the owner chooses a PIN'); }
+function ownRelock(){ ownOk = false; }
+function ownBad(msg){ const d = $('#ownDots'); d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake'); ownEntry = ''; ownDraw(); $('#ownMsg').textContent = msg; }
+async function ownDone(){
+  const h = await pinHash('owner:' + ownEntry);
+  if (ownMode === 'unlock' || ownMode === 'old') {
+    if (Date.now() < ownBlock) return ownBad('Too many tries. Wait a moment.');
+    if (h !== ownSaved()) { ownFails++; if (ownFails >= 5) { ownFails = 0; ownBlock = Date.now() + 60000; return ownBad('Too many tries. Wait 1 minute.'); } return ownBad('Wrong owner PIN'); }
+    ownFails = 0; if (ownMode === 'old') return ownShow('set'); return ownLoad();
+  }
+  if (ownMode === 'set') { ownFirst = h; return ownShow('confirm'); }
+  if (ownMode === 'confirm') {
+    if (h !== ownFirst) return ownShow('set', "PINs didn't match. Start again.");
+    try { localStorage.setItem(OWN_KEY, h); } catch (e) {}
+    toast('Owner PIN saved'); ownLoad();
+  }
+}
+document.querySelectorAll('#ownKeys button').forEach(b => b.onclick = () => {
+  const k = b.dataset.k;
+  if (k === 'clear') ownEntry = ''; else if (k === 'back') ownEntry = ownEntry.slice(0, -1); else if (ownEntry.length < 4) ownEntry += b.textContent;
+  ownDraw(); if (ownEntry.length === 4) setTimeout(ownDone, 120);
+});
+$('#ownChange').onclick = () => ownShow('old');
+$('#ownForgot').onclick = async () => { if (!confirm('Sign out? Sign back in with the staff email and password, then set new PINs.')) return; try { localStorage.removeItem(OWN_KEY); localStorage.removeItem('laviva-pin'); } catch (e) {} await db.auth.signOut(); location.reload(); };
 renderCats(); renderGrid(); renderCart(); checkSession();
 </script>
 </body>
