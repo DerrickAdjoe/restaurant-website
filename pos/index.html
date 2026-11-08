@@ -94,7 +94,7 @@ button{cursor:pointer;border:0;background:none}
 .pm button[data-pm=""].on{background:#3a3f48;border-color:#3a3f48}
 
 .tabs{display:flex;gap:6px;align-items:flex-end;padding:calc(env(safe-area-inset-top) + 8px) 18px 0;background:#16181d;border-bottom:1px solid rgba(255,255,255,.08);height:64px}
-.tab{display:flex;align-items:center;gap:8px;padding:10px 16px 12px;font-size:17px;font-weight:600;color:rgba(255,255,255,.55);position:relative}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px 12px;font-size:18px;font-weight:800;letter-spacing:.01em;color:rgba(255,255,255,.55);position:relative}
 .tab .ti{font-size:22px;line-height:1}
 .tab.on{color:#fff}
 .tab.on::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:4px;border-radius:4px 4px 0 0;background:#fff}
@@ -161,9 +161,9 @@ button{cursor:pointer;border:0;background:none}
   </div>
 </div>
 <nav class="tabs" id="tabs">
-  <button class="tab on" data-v="order"><span class="ti">🛒</span>New order</button>
-  <button class="tab" data-v="open"><span class="ti">🧾</span>Open orders<i class="bd" id="bdOpen"></i></button>
-  <button class="tab" data-v="pays"><span class="ti">✅</span>Payments<i class="bd green" id="bdPays"></i></button>
+  <button class="tab on" data-v="order">New order</button>
+  <button class="tab" data-v="open">Open orders<i class="bd" id="bdOpen"></i></button>
+  <button class="tab" data-v="pays">Payments<i class="bd green" id="bdPays"></i></button>
 </nav>
 <div class="app">
   <section class="left">
