@@ -171,6 +171,26 @@ button{cursor:pointer;border:0;background:none}
 .tl .in{margin-top:6px}
 .tdiff{margin-top:10px;font-weight:700;font-size:17px;text-align:center;min-height:22px}
 .tdiff.ok{color:#5fd38b}.tdiff.short{color:#ef5350}.tdiff.over{color:var(--sun)}
+.tsp{flex:1}
+.lockb{align-self:center;margin-bottom:8px;padding:9px 16px;border-radius:999px;border:1.5px solid rgba(255,255,255,.25);font-weight:800;font-size:15px;color:#fff}
+.pinlock{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(70% 50% at 100% 0%,rgba(158,47,69,.28),transparent 70%),#1d2026}
+.pinlock[hidden]{display:none !important}
+.pinbox{text-align:center;width:min(360px,100%)}
+.pinbox img{width:180px;display:block;margin:0 auto 14px}
+.pinbox h3{margin:0 0 18px;font-size:22px}
+.dots{display:flex;justify-content:center;gap:18px;margin-bottom:10px}
+.dots i{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.5)}
+.dots i.on{background:#fff;border-color:#fff}
+.dots.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.pmsg{min-height:22px;color:#ff8a7a;font-size:14px;margin-bottom:8px}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.keys button{height:72px;border-radius:18px;background:#262a31;font-size:28px;font-weight:700}
+.keys button:active{background:#3a3f48}
+.keys .kx{font-size:16px;font-weight:600;color:rgba(255,255,255,.7)}
+.plinks{display:flex;justify-content:space-between;margin-top:18px}
+.plinks button{color:rgba(255,255,255,.6);font-size:14px;padding:8px}
+.tick{z-index:70}
 </style>
 </head>
 <body>
@@ -188,6 +208,7 @@ button{cursor:pointer;border:0;background:none}
   <button class="tab on" data-v="order">New order</button>
   <button class="tab" data-v="open">Open orders<i class="bd" id="bdOpen"></i></button>
   <button class="tab" data-v="pays">Payments<i class="bd green" id="bdPays"></i></button>
+  <span class="tsp"></span><button class="lockb" id="lockBtn">Lock</button>
 </nav>
 <div class="app">
   <section class="left">
@@ -217,6 +238,19 @@ button{cursor:pointer;border:0;background:none}
 </div>
 <div class="sheet" id="optSheet"><div class="box"><h3 id="oName"></h3><p>Choose a size</p><div class="opts" id="oList"></div><button class="cancel" data-close>Cancel</button></div></div>
 <div class="sheet" id="noteSheet"><div class="box"><h3>Add a note</h3><p id="nFor"></p><input class="in" id="nText" placeholder="e.g. extra spicy, no onions" autocomplete="off"><button class="ok" id="nSave">Save note</button><button class="cancel" data-close>Cancel</button></div></div>
+<div class="pinlock" id="pinLock" hidden>
+  <div class="pinbox">
+    <img src="../assets/images/logo.webp" alt="La Viva Lounge">
+    <h3 id="pinTitle">Enter cashier PIN</h3>
+    <div class="dots" id="pinDots"><i></i><i></i><i></i><i></i></div>
+    <div class="pmsg" id="pinMsg"></div>
+    <div class="keys" id="pinKeys">
+      <button>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button>9</button>
+      <button class="kx" data-k="clear">Clear</button><button>0</button><button class="kx" data-k="back">⌫</button>
+    </div>
+    <div class="plinks"><button id="pinChange">Change PIN</button><button id="pinForgot">Forgot PIN? Sign out</button></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 <section class="view" id="vOpen" hidden><h2>Open orders</h2><p class="vs">Today's unpaid orders. When a customer pays, tap how they paid.</p><div class="olist" id="openList"></div></section>
 <section class="view" id="vPays" hidden>
@@ -243,7 +277,7 @@ const ced = n => 'GH₵ ' + (Math.round(n * 100) / 100);
 let cat = MENU[0].cat, cart = [], type = 'Dine in', paid = false, noteIdx = -1, busy = false;
 let payMethod = '';
 function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('show'),2600); }
-async function checkSession(){ const { data } = await db.auth.getSession(); $('#login').style.display = data.session ? 'none' : 'flex'; if (data.session) startLive(); }
+async function checkSession(){ const { data } = await db.auth.getSession(); $('#login').style.display = data.session ? 'none' : 'flex'; if (data.session) { startLive(); pinBoot(); } }
 $('#lBtn').onclick = async () => {
   $('#lErr').textContent='';
   const { error } = await db.auth.signInWithPassword({ email: $('#lEmail').value.trim(), password: $('#lPass').value });
@@ -486,6 +520,47 @@ $('#tillSave').onclick = async () => {
   if (error) { $('#tillMsg').textContent = 'Could not save. Check the internet, or ask the owner to run the till setup.'; return; }
   closeSheets(); showTick(counted, 'cash', 'Till closed · ' + (row.difference === 0 ? 'cash matches' : row.difference < 0 ? 'short ' + ced(-row.difference) : 'over ' + ced(row.difference)));
 };
+
+/* ---------- cashier PIN lock ---------- */
+const PIN_KEY = 'laviva-pin', IDLE_MIN = 5;
+let pinMode = 'unlock', pinEntry = '', pinFirst = '', pinFails = 0, pinBlockUntil = 0, idleT = null, pinBooted = false;
+async function pinHash(p){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('laviva-pos:' + p)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
+const savedPin = () => { try { return localStorage.getItem(PIN_KEY); } catch (e) { return null; } };
+function pinDraw(){ document.querySelectorAll('#pinDots i').forEach((d, i) => d.classList.toggle('on', i < pinEntry.length)); }
+function pinShow(mode, msg){
+  pinMode = mode; pinEntry = ''; pinDraw();
+  $('#pinTitle').textContent = { unlock: 'Enter cashier PIN', set: 'Set a 4-digit cashier PIN', confirm: 'Enter the new PIN again', old: 'Enter the current PIN' }[mode];
+  $('#pinMsg').textContent = msg || ''; $('#pinChange').hidden = mode !== 'unlock'; $('#pinLock').hidden = false;
+}
+function lockNow(){ if ($('#login').style.display === 'flex') return; savedPin() ? pinShow('unlock') : pinShow('set', 'First time: choose a PIN for this iPad'); }
+function pinBad(msg){ const d = $('#pinDots'); d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake'); pinEntry = ''; pinDraw(); $('#pinMsg').textContent = msg; }
+async function pinDone(){
+  const h = await pinHash(pinEntry);
+  if (pinMode === 'unlock' || pinMode === 'old') {
+    if (Date.now() < pinBlockUntil) return pinBad('Too many tries. Wait a moment.');
+    if (h !== savedPin()) { pinFails++; if (pinFails >= 5) { pinFails = 0; pinBlockUntil = Date.now() + 30000; return pinBad('Too many tries. Wait 30 seconds.'); } return pinBad('Wrong PIN, try again'); }
+    pinFails = 0;
+    if (pinMode === 'old') return pinShow('set');
+    $('#pinLock').hidden = true; resetIdle(); return;
+  }
+  if (pinMode === 'set') { pinFirst = h; return pinShow('confirm'); }
+  if (pinMode === 'confirm') {
+    if (h !== pinFirst) return pinShow('set', "PINs didn't match. Start again.");
+    try { localStorage.setItem(PIN_KEY, h); } catch (e) {}
+    $('#pinLock').hidden = true; toast('PIN saved'); resetIdle();
+  }
+}
+document.querySelectorAll('#pinKeys button').forEach(b => b.onclick = () => {
+  const k = b.dataset.k;
+  if (k === 'clear') pinEntry = ''; else if (k === 'back') pinEntry = pinEntry.slice(0, -1); else if (pinEntry.length < 4) pinEntry += b.textContent;
+  pinDraw(); if (pinEntry.length === 4) setTimeout(pinDone, 120);
+});
+$('#pinChange').onclick = () => pinShow('old');
+$('#pinForgot').onclick = async () => { if (!confirm('Sign out? You will need the staff email and password to sign back in, then you can set a new PIN.')) return; try { localStorage.removeItem(PIN_KEY); } catch (e) {} $('#pinLock').hidden = true; await db.auth.signOut(); checkSession(); };
+$('#lockBtn').onclick = lockNow;
+function resetIdle(){ clearTimeout(idleT); idleT = setTimeout(() => { if ($('#pinLock').hidden) lockNow(); }, IDLE_MIN * 60000); }
+['touchstart', 'click', 'keydown'].forEach(e => document.addEventListener(e, () => { if ($('#pinLock').hidden) resetIdle(); }, { passive: true }));
+function pinBoot(){ if (pinBooted) return; pinBooted = true; lockNow(); }
 renderCats(); renderGrid(); renderCart(); checkSession();
 </script>
 </body>
