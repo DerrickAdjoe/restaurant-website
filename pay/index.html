@@ -48,7 +48,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
     <div class="field"><label for="amount">Amount</label>
       <div class="amt"><span>GH₵</span><input id="amount" type="number" inputmode="decimal" min="1" step="0.01" placeholder="0.00"></div></div>
     <div class="field"><label for="name">Your name (optional)</label><input id="name" type="text" autocomplete="name"></div>
-    <div class="field"><label for="ref">Table or ticket number (optional)</label><input id="ref" type="text" placeholder="e.g. Table 5 or G-07"></div>
+    <div class="field"><label for="ref">Table or ticket number (required)</label><input id="ref" type="text" placeholder="e.g. Table 5 or G-07"></div>
     <div class="sum">
       <div><span>Amount</span><span id="sAmt">GH₵ 0.00</span></div>
       <div><span>Mobile money fee</span><span id="sFee">GH₵ 0.00</span></div>
@@ -71,12 +71,13 @@ const chargeFor = t => Math.ceil((t/(1-FEE)+0.01)*100)/100;
 if (KEY.startsWith('pk_')) { const s=document.createElement('script'); s.src='https://js.paystack.co/v1/inline.js'; document.head.appendChild(s); }
 function update(){
   const a = parseFloat($('#amount').value) || 0;
-  const ok = a >= 1;
+  const ok = a >= 1 && $('#ref').value.trim().length > 0;
   const ch = ok ? chargeFor(a) : 0;
   $('#sAmt').textContent = c2(ok?a:0); $('#sFee').textContent = c2(ok?ch-a:0); $('#sTot').textContent = c2(ch);
   $('#payBtn').disabled = !ok; $('#payBtn').textContent = ok ? 'Pay ' + c2(ch) + ' with Mobile Money' : 'Pay with Mobile Money';
 }
 $('#amount').addEventListener('input', update);
+$('#ref').addEventListener('input', update);
 function receipt(p){
   $('#form').style.display='none';
   const rc=$('#rc'); rc.style.display='block';
@@ -94,7 +95,7 @@ function receipt(p){
 }
 $('#payBtn').addEventListener('click', () => {
   const amount = parseFloat($('#amount').value) || 0;
-  if (amount < 1) return;
+  if (amount < 1 || !$('#ref').value.trim()) return;
   if (!window.PaystackPop){ $('#msg').textContent='Payment is still loading. Try again in a moment.'; return; }
   const charge = chargeFor(amount);
   const name = $('#name').value.trim(), tref = $('#ref').value.trim();
