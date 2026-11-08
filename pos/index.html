@@ -92,6 +92,50 @@ button{cursor:pointer;border:0;background:none}
 .pm button{flex:1;padding:9px 0;border-radius:10px;border:1.5px solid rgba(255,255,255,.15);font-weight:600;font-size:14px;color:#fff}
 .pm button.on{background:var(--green);border-color:var(--green)}
 .pm button[data-pm=""].on{background:#3a3f48;border-color:#3a3f48}
+
+.tabs{display:flex;gap:6px;align-items:flex-end;padding:calc(env(safe-area-inset-top) + 8px) 18px 0;background:#16181d;border-bottom:1px solid rgba(255,255,255,.08);height:64px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 16px 12px;font-size:17px;font-weight:600;color:rgba(255,255,255,.55);position:relative}
+.tab .ti{font-size:22px;line-height:1}
+.tab.on{color:#fff}
+.tab.on::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:4px;border-radius:4px 4px 0 0;background:#fff}
+.tab .bd{font-style:normal;min-width:22px;height:22px;border-radius:999px;background:var(--amber);color:#fff;font-size:12px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 6px}
+.tab .bd.show{display:inline-flex}
+.tab .bd.green{background:var(--green)}
+.app{height:calc(100vh - 64px);height:calc(100dvh - 64px);padding-top:0}
+.view{height:calc(100vh - 64px);height:calc(100dvh - 64px);overflow-y:auto;padding:20px 22px 30px}
+.view h2{font-family:'Bodoni Moda',Georgia,serif;font-weight:500;font-size:28px;margin:0 0 4px}
+.view .vs{color:var(--muted);margin:0 0 16px;font-size:14px}
+.olist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.oc{background:var(--card);border-radius:16px;padding:14px 16px}
+.oc .h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.oc .h b{font-size:22px}.oc .h span{color:var(--muted);font-size:13px}
+.oc .w{color:rgba(255,255,255,.8);font-size:14px;margin:2px 0 6px}
+.oc .it{color:var(--muted);font-size:13px;margin-bottom:10px}
+.oc .t{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:700;font-size:18px}
+.oc .t small{font-size:12px;font-weight:600;padding:3px 8px;border-radius:6px;background:#4a2323;color:#ffaaa0}
+.oc .mk{display:flex;gap:6px}
+.oc .mk button{flex:1;padding:12px 0;border-radius:10px;background:#2f343d;font-weight:700;font-size:15px}
+.oc .mk button:active{background:var(--green)}
+.sum{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.sum div{background:var(--card);border-radius:14px;padding:12px 16px;min-width:140px}
+.sum small{display:block;color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.sum b{font-size:20px}
+.pr{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:12px 16px;margin-bottom:8px}
+.pr .ok{width:38px;height:38px;border-radius:50%;background:var(--green);display:grid;place-items:center;flex:none}
+.pr .m{flex:1;min-width:0}
+.pr .m b{font-size:18px}.pr .m div{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pr .tm{color:var(--muted);font-size:13px}
+.tick{position:fixed;inset:0;background:rgba(10,12,15,.72);display:none;align-items:center;justify-content:center;z-index:50}
+.tick.show{display:flex}
+.tbox{background:#1d2026;border-radius:26px;padding:30px 40px;text-align:center;min-width:320px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:tpop .3s ease}
+@keyframes tpop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.tbox svg{width:130px;height:130px}
+.tbox .tc{fill:#22a855;stroke:#22a855;stroke-width:4;stroke-dasharray:340;stroke-dashoffset:340;animation:tc .45s ease forwards}
+.tbox .tp{fill:none;stroke:#fff;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:90;stroke-dashoffset:90;animation:tp .35s .4s ease forwards}
+@keyframes tc{to{stroke-dashoffset:0}}@keyframes tp{to{stroke-dashoffset:0}}
+.tbox .tt{color:#5fd38b;font-weight:700;letter-spacing:.08em;margin-top:10px;font-size:15px}
+.tbox .ta{font-size:40px;font-weight:700;margin:4px 0}
+.tbox .td{color:rgba(255,255,255,.8);font-size:16px}
 </style>
 </head>
 <body>
@@ -105,6 +149,11 @@ button{cursor:pointer;border:0;background:none}
     <div class="err" id="lErr"></div>
   </div>
 </div>
+<nav class="tabs" id="tabs">
+  <button class="tab on" data-v="order"><span class="ti">🛒</span>New order</button>
+  <button class="tab" data-v="open"><span class="ti">🧾</span>Open orders<i class="bd" id="bdOpen"></i></button>
+  <button class="tab" data-v="pays"><span class="ti">✅</span>Payments<i class="bd green" id="bdPays"></i></button>
+</nav>
 <div class="app">
   <section class="left">
     <div class="top">
@@ -134,6 +183,9 @@ button{cursor:pointer;border:0;background:none}
 <div class="sheet" id="optSheet"><div class="box"><h3 id="oName"></h3><p>Choose a size</p><div class="opts" id="oList"></div><button class="cancel" data-close>Cancel</button></div></div>
 <div class="sheet" id="noteSheet"><div class="box"><h3>Add a note</h3><p id="nFor"></p><input class="in" id="nText" placeholder="e.g. extra spicy, no onions" autocomplete="off"><button class="ok" id="nSave">Save note</button><button class="cancel" data-close>Cancel</button></div></div>
 <div class="toast" id="toast"></div>
+<section class="view" id="vOpen" hidden><h2>Open orders</h2><p class="vs">Today's unpaid orders. When a customer pays, tap how they paid.</p><div class="olist" id="openList"></div></section>
+<section class="view" id="vPays" hidden><h2>Payments today</h2><p class="vs">Every payment confirmed today: at the counter and through Paystack (pay QR and website).</p><div class="sum" id="paySum"></div><div id="payList"></div></section>
+<div class="tick" id="tick"><div class="tbox"><svg viewBox="0 0 120 120"><circle class="tc" cx="60" cy="60" r="54"/><path class="tp" d="M36 62 l16 16 l32 -34"/></svg><div class="tt">PAYMENT RECEIVED</div><div class="ta" id="tkAmt"></div><div class="td" id="tkDet"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL = 'https://znxakuzpofjspahvdacf.supabase.co';
@@ -145,7 +197,7 @@ const ced = n => 'GH₵ ' + (Math.round(n * 100) / 100);
 let cat = MENU[0].cat, cart = [], type = 'Dine in', paid = false, noteIdx = -1, busy = false;
 let payMethod = '';
 function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('show'),2600); }
-async function checkSession(){ const { data } = await db.auth.getSession(); $('#login').style.display = data.session ? 'none' : 'flex'; }
+async function checkSession(){ const { data } = await db.auth.getSession(); $('#login').style.display = data.session ? 'none' : 'flex'; if (data.session) startLive(); }
 $('#lBtn').onclick = async () => {
   $('#lErr').textContent='';
   const { error } = await db.auth.signInWithPassword({ email: $('#lEmail').value.trim(), password: $('#lPass').value });
@@ -224,10 +276,86 @@ $('#send').onclick = async () => {
   const { error } = await db.from('orders').insert(row);
   busy = false;
   if (error) { $('#hint').textContent = 'Could not send. Check the internet and try again.'; validate(); return; }
-  toast('Sent to kitchen: ' + row.label + ' · ' + row.first_name); reset();
+  toast('Sent to kitchen: ' + row.label + ' · ' + row.first_name); if (row.paid) showTick(row.total, row.payment_method, row.label + ' · ' + row.first_name); reset(); loadToday();
 };
 function net(){ $('#dot').classList.toggle('off', !navigator.onLine); }
 addEventListener('online', net); addEventListener('offline', net); net();
+
+/* ---------- tabs, open orders, payments, green tick ---------- */
+const MNAME = { cash: 'Cash', momo: 'MoMo', card: 'Card', website: 'Website', mobile_money: 'MoMo' };
+let view = 'order', todayOrders = [], todayPays = [], liveOn = false, unseenPays = 0, tkAudio = null, reloadT = null;
+const tKey = t => new Date(t).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+const escH = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function showView(v){
+  view = v;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.v === v));
+  document.querySelector('.app').style.display = v === 'order' ? '' : 'none';
+  $('#vOpen').hidden = v !== 'open'; $('#vPays').hidden = v !== 'pays';
+  if (v === 'pays') { unseenPays = 0; renderPays(); }
+}
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => showView(t.dataset.v));
+function tkChime(){ try { tkAudio = tkAudio || new (window.AudioContext||window.webkitAudioContext)(); const t = tkAudio.currentTime;
+  [[784,0],[1046,.15],[1318,.3]].forEach(([fq,d]) => { const o = tkAudio.createOscillator(), g = tkAudio.createGain(); o.frequency.value = fq; o.connect(g); g.connect(tkAudio.destination);
+  g.gain.setValueAtTime(.0001,t+d); g.gain.exponentialRampToValueAtTime(.35,t+d+.02); g.gain.exponentialRampToValueAtTime(.0001,t+d+.35); o.start(t+d); o.stop(t+d+.4); }); } catch(e){} }
+function showTick(amount, method, who){
+  const box = $('#tick .tbox'), clone = box.cloneNode(true); box.replaceWith(clone);
+  $('#tkAmt').textContent = ced(+amount || 0);
+  $('#tkDet').textContent = [MNAME[method] || method, who].filter(Boolean).join(' · ');
+  $('#tick').classList.add('show'); tkChime();
+  clearTimeout(showTick.t); showTick.t = setTimeout(() => $('#tick').classList.remove('show'), 4000);
+}
+$('#tick').onclick = () => $('#tick').classList.remove('show');
+async function loadToday(){
+  const since = new Date(); since.setHours(0,0,0,0); const iso = since.toISOString();
+  const [o, p] = await Promise.all([
+    db.from('orders').select('*').gte('created_at', iso).order('created_at', { ascending: false }).limit(300),
+    db.from('payments').select('*').gte('created_at', iso).order('created_at', { ascending: false }).limit(300)
+  ]);
+  if (o && o.data) todayOrders = o.data; if (p && p.data) todayPays = p.data;
+  renderOpen(); renderPays();
+}
+function renderOpen(){
+  const list = todayOrders.filter(o => !o.paid && o.status !== 'cancelled');
+  $('#bdOpen').textContent = list.length; $('#bdOpen').classList.toggle('show', list.length > 0);
+  $('#openList').innerHTML = list.length ? list.map(o => `<div class="oc"><div class="h"><b>${escH(o.label)}</b><span>${tKey(o.created_at)} · ${escH(o.status)}</span></div>
+    <div class="w">${escH(o.first_name)} · ${escH(o.order_type)}</div>
+    <div class="it">${(o.items || []).map(i => i.qty + '× ' + escH(i.name)).join(', ')}</div>
+    <div class="t"><span>${ced(+o.total)}</span><small>UNPAID</small></div>
+    <div class="mk"><button data-pay="${o.id}" data-m="cash">Cash</button><button data-pay="${o.id}" data-m="momo">MoMo</button><button data-pay="${o.id}" data-m="card">Card</button></div></div>`).join('')
+    : '<p class="empty">No unpaid orders. Everything is settled 👍</p>';
+  document.querySelectorAll('[data-pay]').forEach(b => b.onclick = () => markPaidPOS(+b.dataset.pay, b.dataset.m));
+}
+async function markPaidPOS(id, m){
+  const o = todayOrders.find(x => x.id === id); if (!o) return;
+  const { error } = await db.from('orders').update({ paid: true, payment_method: m, paid_at: new Date().toISOString() }).eq('id', id);
+  if (error) { toast('Could not save. Check the internet.'); return; }
+  Object.assign(o, { paid: true, payment_method: m, paid_at: new Date().toISOString() });
+  showTick(o.total, m, o.label + ' · ' + o.first_name); renderOpen(); renderPays();
+}
+function renderPays(){
+  const counter = todayOrders.filter(o => o.paid && o.status !== 'cancelled' && ['cash','momo','card'].includes(o.payment_method))
+    .map(o => ({ t: o.paid_at || o.created_at, amount: +o.total, m: o.payment_method, who: o.label + ' · ' + o.first_name, ref: 'At the counter' }));
+  const ps = todayPays.map(p => ({ t: p.paid_at || p.created_at, amount: +(p.amount_before_fee ?? p.amount), m: p.channel || 'mobile_money', who: [p.customer_name, p.table_ticket].filter(Boolean).join(' · ') || (p.source === 'counter_qr' ? 'Pay QR' : 'Website'), ref: (p.source === 'counter_qr' ? 'Pay QR · ' : 'Website · ') + p.reference }));
+  const sum = (l, f) => l.filter(f).reduce((a, x) => a + x.amount, 0);
+  $('#paySum').innerHTML = `<div><small>Cash</small><b>${ced(sum(counter, x => x.m === 'cash'))}</b></div><div><small>MoMo (counter)</small><b>${ced(sum(counter, x => x.m === 'momo'))}</b></div><div><small>Card (counter)</small><b>${ced(sum(counter, x => x.m === 'card'))}</b></div><div><small>Paystack (QR &amp; web)</small><b>${ced(sum(ps, () => true))}</b></div>`;
+  const all = counter.concat(ps).sort((a, b) => new Date(b.t) - new Date(a.t));
+  $('#payList').innerHTML = all.length ? all.map(x => `<div class="pr"><div class="ok"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div>
+    <div class="m"><b>${ced(x.amount)}</b> · ${escH(MNAME[x.m] || x.m)}<div>${escH(x.who)} · ${escH(x.ref)}</div></div><div class="tm">${tKey(x.t)}</div></div>`).join('') : '<p class="empty">No payments yet today</p>';
+  $('#bdPays').textContent = unseenPays; $('#bdPays').classList.toggle('show', unseenPays > 0 && view !== 'pays');
+}
+function startLive(){
+  if (liveOn) return; liveOn = true; loadToday();
+  db.channel('pos-live')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'payments' }, ev => {
+      const p = ev.new; todayPays.unshift(p); if (view !== 'pays') unseenPays++;
+      showTick(p.amount_before_fee ?? p.amount, p.channel || 'mobile_money', [p.customer_name, p.table_ticket].filter(Boolean).join(' · ') || (p.source === 'counter_qr' ? 'Pay QR' : 'Website order'));
+      renderPays();
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => { clearTimeout(reloadT); reloadT = setTimeout(loadToday, 400); })
+    .subscribe();
+  setInterval(loadToday, 30000);
+}
+document.addEventListener('touchstart', () => { try { tkAudio = tkAudio || new (window.AudioContext||window.webkitAudioContext)(); tkAudio.resume(); } catch(e){} }, { once: true });
 renderCats(); renderGrid(); renderCart(); checkSession();
 </script>
 </body>
