@@ -147,6 +147,30 @@ button{cursor:pointer;border:0;background:none}
 @keyframes fillpop{to{transform:scale(1)}}
 @keyframes rip{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.7);opacity:0}}
 .tbox svg{width:auto;height:auto}
+.ph{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.till{padding:12px 18px;border-radius:12px;background:linear-gradient(90deg,var(--amber),var(--amber2));font-weight:700;font-size:15px;white-space:nowrap}
+.pf{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.pc{padding:8px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.18);font-weight:700;font-size:14px;color:rgba(255,255,255,.75)}
+.pc.on{background:#fff;color:#1d2026;border-color:#fff}
+.psearch{flex:1;min-width:200px;background:var(--card);border:1.5px solid transparent;border-radius:12px;padding:10px 14px;font-size:15px;outline:none}
+.psearch:focus{border-color:var(--amber)}
+.pr{cursor:pointer}
+.pr:active{background:#2f343d}
+.rcbox{max-width:440px}
+.rch{text-align:center;margin-bottom:12px}.rch b{font-family:'Bodoni Moda',Georgia,serif;font-size:22px;font-weight:500}.rch div{color:var(--muted);font-size:13px}
+.rcl{display:flex;justify-content:space-between;font-size:15px;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.12)}
+.rcl small{color:var(--muted)}
+.rct{display:flex;justify-content:space-between;font-weight:700;font-size:20px;margin:10px 0 6px}
+.rcm{color:var(--muted);font-size:14px;line-height:1.7}
+.rcok{display:flex;align-items:center;justify-content:center;gap:8px;color:#5fd38b;font-weight:700;margin:6px 0 2px}
+.rcb{display:flex;flex-direction:column;align-items:stretch;margin-top:12px}
+.trow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:15px}
+.trow b{font-weight:700}
+.tl{display:block;color:var(--muted);font-size:13px;margin-top:12px}
+.tl .in{margin-top:6px}
+.tdiff{margin-top:10px;font-weight:700;font-size:17px;text-align:center;min-height:22px}
+.tdiff.ok{color:#5fd38b}.tdiff.short{color:#ef5350}.tdiff.over{color:var(--sun)}
 </style>
 </head>
 <body>
@@ -195,7 +219,18 @@ button{cursor:pointer;border:0;background:none}
 <div class="sheet" id="noteSheet"><div class="box"><h3>Add a note</h3><p id="nFor"></p><input class="in" id="nText" placeholder="e.g. extra spicy, no onions" autocomplete="off"><button class="ok" id="nSave">Save note</button><button class="cancel" data-close>Cancel</button></div></div>
 <div class="toast" id="toast"></div>
 <section class="view" id="vOpen" hidden><h2>Open orders</h2><p class="vs">Today's unpaid orders. When a customer pays, tap how they paid.</p><div class="olist" id="openList"></div></section>
-<section class="view" id="vPays" hidden><h2>Payments today</h2><p class="vs">Every payment confirmed today: at the counter and through Paystack (pay QR and website).</p><div class="sum" id="paySum"></div><div id="payList"></div></section>
+<section class="view" id="vPays" hidden>
+  <div class="ph"><div><h2>Payments today</h2><p class="vs">Every payment confirmed today: at the counter and through Paystack (pay QR and website).</p></div><button class="till" id="tillBtn">Close till</button></div>
+  <div class="sum" id="paySum"></div>
+  <div class="pf"><div class="chips" id="payChips"><button class="pc on" data-f="all">All</button><button class="pc" data-f="cash">Cash</button><button class="pc" data-f="momo">MoMo</button><button class="pc" data-f="card">Card</button><button class="pc" data-f="paystack">Paystack</button></div><input class="psearch" id="paySearch" placeholder="Search table, name or receipt…" autocomplete="off"></div>
+  <div id="payList"></div>
+</section>
+<div class="sheet" id="rcSheet"><div class="box rcbox"><div id="rcBody"></div><div class="rcb"><button class="ok" id="rcShare">Share receipt</button><button class="cancel" data-close>Close</button></div></div></div>
+<div class="sheet" id="tillSheet"><div class="box rcbox"><h3>Close till · <span id="tillDay"></span></h3><p>Count the cash in the drawer and enter it below.</p><div id="tillRows"></div>
+  <label class="tl">Cash counted (GH₵)<input class="in" id="tillCash" type="number" inputmode="decimal" step="0.01" placeholder="0.00"></label>
+  <div class="tdiff" id="tillDiff"></div>
+  <label class="tl">Note (optional)<input class="in" id="tillNote" placeholder="e.g. GH₵20 float left in drawer" autocomplete="off"></label>
+  <div class="rcb"><button class="ok" id="tillSave">Save &amp; close the day</button><button class="cancel" data-close>Cancel</button></div><div class="hint" id="tillMsg"></div></div></div>
 <div class="tick" id="tick"><div class="tbox"><div class="tkw"><span class="rip"></span><span class="rip r2"></span><svg viewBox="0 0 120 120"><circle class="tickRing" cx="60" cy="60" r="54"/><circle class="tc" cx="60" cy="60" r="54"/><path class="tp" d="M36 62 l16 16 l32 -34"/></svg></div><div class="tt">PAYMENT RECEIVED</div><div class="ta" id="tkAmt"></div><div class="td" id="tkDet"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <script>
@@ -373,6 +408,84 @@ function startLive(){
   setInterval(loadToday, 30000);
 }
 document.addEventListener('touchstart', () => { try { tkAudio = tkAudio || new (window.AudioContext||window.webkitAudioContext)(); tkAudio.resume(); } catch(e){} }, { once: true });
+
+/* ---------- payments: filters, search, receipts, close till ---------- */
+let payFilter = 'all', payEntries = [];
+document.querySelectorAll('#payChips .pc').forEach(b => b.onclick = () => { payFilter = b.dataset.f; document.querySelectorAll('#payChips .pc').forEach(x => x.classList.toggle('on', x === b)); renderPays(); });
+$('#paySearch').addEventListener('input', () => renderPays());
+function buildEntries(){
+  const counter = todayOrders.filter(o => o.paid && o.status !== 'cancelled' && ['cash','momo','card'].includes(o.payment_method))
+    .map(o => ({ kind: 'counter', t: o.paid_at || o.created_at, amount: +o.total, m: o.payment_method, who: o.label + ' · ' + o.first_name, ref: 'Order #' + o.id, order: o }));
+  const ps = todayPays.map(p => { const o = todayOrders.find(x => x.payment_ref === p.reference);
+    return { kind: 'paystack', t: p.paid_at || p.created_at, amount: +(p.amount_before_fee ?? p.amount), paidTotal: +p.amount, m: p.channel || 'mobile_money',
+      who: [p.customer_name, p.table_ticket].filter(Boolean).join(' · ') || (p.source === 'counter_qr' ? 'Pay QR' : 'Website'),
+      ref: p.reference, src: p.source === 'counter_qr' ? 'Pay QR' : 'Website', order: o }; });
+  return counter.concat(ps).sort((a, b) => new Date(b.t) - new Date(a.t));
+}
+function renderPays(){
+  const all = buildEntries();
+  const sum = f => all.filter(f).reduce((a, x) => a + x.amount, 0);
+  const total = sum(() => true);
+  $('#paySum').innerHTML = `<div><small>Total today</small><b>${ced(total)}</b></div><div><small>Cash</small><b>${ced(sum(x => x.kind === 'counter' && x.m === 'cash'))}</b></div><div><small>MoMo (counter)</small><b>${ced(sum(x => x.kind === 'counter' && x.m === 'momo'))}</b></div><div><small>Card (counter)</small><b>${ced(sum(x => x.kind === 'counter' && x.m === 'card'))}</b></div><div><small>Paystack</small><b>${ced(sum(x => x.kind === 'paystack'))}</b></div><div><small>Payments</small><b>${all.length}</b></div>`;
+  const q = ($('#paySearch').value || '').trim().toLowerCase();
+  payEntries = all.filter(x => payFilter === 'all' || (payFilter === 'paystack' ? x.kind === 'paystack' : (x.kind === 'counter' && x.m === payFilter)))
+                  .filter(x => !q || [x.who, x.ref, x.src].join(' ').toLowerCase().includes(q));
+  $('#payList').innerHTML = payEntries.length ? payEntries.map((x, i) => `<div class="pr" data-rc="${i}"><div class="ok"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div>
+    <div class="m"><b>${ced(x.amount)}</b> · ${escH(MNAME[x.m] || x.m)}${x.src ? ' · ' + x.src : ''}<div>${escH(x.who)} · ${escH(x.ref)}</div></div><div class="tm">${tKey(x.t)}</div></div>`).join('')
+    : `<p class="empty">${all.length ? 'No payments match' : 'No payments yet today'}</p>`;
+  document.querySelectorAll('[data-rc]').forEach(r => r.onclick = () => openReceipt(payEntries[+r.dataset.rc]));
+  $('#bdPays').textContent = unseenPays; $('#bdPays').classList.toggle('show', unseenPays > 0 && view !== 'pays');
+}
+let rcText = '';
+function openReceipt(x){
+  const o = x.order, when = new Date(x.t), d = when.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + tKey(x.t);
+  const lines = o ? (o.items || []).map(i => `<div class="rcl"><span>${i.qty} × ${escH(i.name)}${i.detail ? ` <small>(${escH(i.detail)})</small>` : ''}</span><span>${ced(i.qty * i.price)}</span></div>`).join('') : '';
+  const fee = x.kind === 'paystack' && x.paidTotal > x.amount ? `<div>Mobile money fee: ${ced(x.paidTotal - x.amount)} · Customer paid ${ced(x.paidTotal)}</div>` : '';
+  $('#rcBody').innerHTML = `<div class="rch"><b>La Viva Lounge</b><div>Rowi Junction, Adenta · 020 642 3766</div></div>
+    <div class="rcok"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5fd38b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7 12l3.5 3.5L17 9"/></svg> PAID</div>
+    ${lines || '<p class="rcm" style="text-align:center">Payment received</p>'}
+    <div class="rct"><span>Total</span><span>${ced(x.amount)}</span></div>
+    <div class="rcm"><div>${escH(x.who)}</div><div>Paid by ${escH(MNAME[x.m] || x.m)}${x.src ? ' · ' + x.src : ''}</div>${fee}<div>${d}</div><div>Ref: ${escH(x.ref)}</div></div>`;
+  rcText = ['La Viva Lounge – Receipt', x.who, ...(o ? (o.items || []).map(i => `${i.qty} x ${i.name}${i.detail ? ' (' + i.detail + ')' : ''} – ${ced(i.qty * i.price)}`) : []),
+    'Total: ' + ced(x.amount), 'Paid by ' + (MNAME[x.m] || x.m) + (x.src ? ' (' + x.src + ')' : ''), d, 'Ref: ' + x.ref, 'Thank you! lavivalounge.com'].join('\n');
+  $('#rcSheet').classList.add('show');
+}
+$('#rcShare').onclick = async () => {
+  if (navigator.share) { try { await navigator.share({ title: 'La Viva Lounge receipt', text: rcText }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+  window.open('https://wa.me/?text=' + encodeURIComponent(rcText), '_blank');
+};
+function tillFigures(){
+  const all = buildEntries(), sum = f => all.filter(f).reduce((a, x) => a + x.amount, 0);
+  return { cash: sum(x => x.kind === 'counter' && x.m === 'cash'), momo: sum(x => x.kind === 'counter' && x.m === 'momo'), card: sum(x => x.kind === 'counter' && x.m === 'card'),
+    paystack: sum(x => x.kind === 'paystack'), total: sum(() => true), count: all.length,
+    unpaid: todayOrders.filter(o => !o.paid && o.status !== 'cancelled') };
+}
+function tillDiff(){
+  const f = tillFigures(), v = $('#tillCash').value, el = $('#tillDiff');
+  if (v === '') { el.textContent = ''; el.className = 'tdiff'; return; }
+  const d = Math.round((parseFloat(v) - f.cash) * 100) / 100;
+  el.className = 'tdiff ' + (d === 0 ? 'ok' : d < 0 ? 'short' : 'over');
+  el.textContent = d === 0 ? '✓ Cash matches exactly' : d < 0 ? 'Short by ' + ced(-d) : 'Over by ' + ced(d);
+}
+$('#tillBtn').onclick = () => {
+  const f = tillFigures();
+  $('#tillDay').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+  $('#tillRows').innerHTML = `<div class="trow"><span>Expected cash</span><b>${ced(f.cash)}</b></div><div class="trow"><span>MoMo (counter)</span><b>${ced(f.momo)}</b></div><div class="trow"><span>Card (counter)</span><b>${ced(f.card)}</b></div><div class="trow"><span>Paystack (QR &amp; web)</span><b>${ced(f.paystack)}</b></div><div class="trow"><span>Total taken · ${f.count} payments</span><b>${ced(f.total)}</b></div>`
+    + (f.unpaid.length ? `<div class="trow" style="color:#ffaaa0"><span>Still unpaid · ${f.unpaid.length} orders</span><b>${ced(f.unpaid.reduce((a, o) => a + +o.total, 0))}</b></div>` : '');
+  $('#tillCash').value = ''; $('#tillNote').value = ''; $('#tillMsg').textContent = ''; tillDiff();
+  $('#tillSheet').classList.add('show'); setTimeout(() => $('#tillCash').focus(), 60);
+};
+$('#tillCash').addEventListener('input', tillDiff);
+$('#tillSave').onclick = async () => {
+  const v = $('#tillCash').value; if (v === '') { $('#tillMsg').textContent = 'Enter the cash counted first.'; return; }
+  const f = tillFigures(), counted = parseFloat(v);
+  const row = { day: new Date().toLocaleDateString('en-CA'), expected_cash: f.cash, counted_cash: counted, difference: Math.round((counted - f.cash) * 100) / 100,
+    momo: f.momo, card: f.card, paystack: f.paystack, total: f.total, payments_count: f.count,
+    unpaid_count: f.unpaid.length, unpaid_total: f.unpaid.reduce((a, o) => a + +o.total, 0), note: $('#tillNote').value.trim() || null };
+  const { error } = await db.from('till_closures').insert(row);
+  if (error) { $('#tillMsg').textContent = 'Could not save. Check the internet, or ask the owner to run the till setup.'; return; }
+  closeSheets(); showTick(counted, 'cash', 'Till closed · ' + (row.difference === 0 ? 'cash matches' : row.difference < 0 ? 'short ' + ced(-row.difference) : 'over ' + ced(row.difference)));
+};
 renderCats(); renderGrid(); renderCart(); checkSession();
 </script>
 </body>
