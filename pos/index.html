@@ -191,6 +191,8 @@ button{cursor:pointer;border:0;background:none}
 .plinks{display:flex;justify-content:space-between;margin-top:18px}
 .plinks button{color:rgba(255,255,255,.6);font-size:14px;padding:8px}
 .tick{z-index:70}
+.vrep{padding:0;overflow:hidden}
+.vrep iframe{display:block;width:100%;height:100%;border:0;background:var(--bg)}
 </style>
 </head>
 <body>
@@ -208,6 +210,7 @@ button{cursor:pointer;border:0;background:none}
   <button class="tab on" data-v="order">New order</button>
   <button class="tab" data-v="open">Open orders<i class="bd" id="bdOpen"></i></button>
   <button class="tab" data-v="pays">Payments<i class="bd green" id="bdPays"></i></button>
+  <button class="tab" data-v="reports">Reports</button>
   <span class="tsp"></span><button class="lockb" id="lockBtn">Lock</button>
 </nav>
 <div class="app">
@@ -252,6 +255,7 @@ button{cursor:pointer;border:0;background:none}
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<section class="view vrep" id="vReports" hidden><iframe id="repFrame" title="Reports"></iframe></section>
 <section class="view" id="vOpen" hidden><h2>Open orders</h2><p class="vs">Today's unpaid orders. When a customer pays, tap how they paid.</p><div class="olist" id="openList"></div></section>
 <section class="view" id="vPays" hidden>
   <div class="ph"><div><h2>Payments today</h2><p class="vs">Every payment confirmed today: at the counter and through Paystack (pay QR and website).</p></div><button class="till" id="tillBtn">Close till</button></div>
@@ -370,7 +374,8 @@ function showView(v){
   view = v;
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.v === v));
   document.querySelector('.app').style.display = v === 'order' ? '' : 'none';
-  $('#vOpen').hidden = v !== 'open'; $('#vPays').hidden = v !== 'pays';
+  $('#vOpen').hidden = v !== 'open'; $('#vPays').hidden = v !== 'pays'; $('#vReports').hidden = v !== 'reports';
+  if (v === 'reports') { const fr = $('#repFrame'); if (!fr.getAttribute('src')) fr.src = '../reports/'; else try { fr.contentWindow.document.getElementById('reload').click(); } catch (e) {} }
   if (v === 'pays') { unseenPays = 0; renderPays(); }
 }
 document.querySelectorAll('.tab').forEach(t => t.onclick = () => showView(t.dataset.v));
