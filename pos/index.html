@@ -136,6 +136,17 @@ button{cursor:pointer;border:0;background:none}
 .tbox .tt{color:#5fd38b;font-weight:700;letter-spacing:.08em;margin-top:10px;font-size:15px}
 .tbox .ta{font-size:40px;font-weight:700;margin:4px 0}
 .tbox .td{color:rgba(255,255,255,.8);font-size:16px}
+.tkw{position:relative;width:140px;height:140px;margin:0 auto}
+.tkw svg{position:relative;width:140px;height:140px;z-index:1}
+.tkw .tickRing{fill:none;stroke:#5fd38b;stroke-width:6;stroke-linecap:round;stroke-dasharray:340;stroke-dashoffset:340;transform:rotate(-90deg);transform-origin:60px 60px;animation:ring .6s cubic-bezier(.65,0,.35,1) forwards}
+.tkw .tc{fill:#22a855;stroke:none;transform:scale(0);transform-origin:60px 60px;animation:fillpop .45s .55s cubic-bezier(.34,1.56,.64,1) forwards}
+.tkw .tp{fill:none;stroke:#fff;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:90;stroke-dashoffset:90;animation:tp .35s .9s ease forwards}
+.tkw .rip{position:absolute;inset:6px;border-radius:50%;border:3px solid rgba(95,211,139,.7);opacity:0;animation:rip 1.4s 1s ease-out 2}
+.tkw .rip.r2{animation-delay:1.35s}
+@keyframes ring{to{stroke-dashoffset:0}}
+@keyframes fillpop{to{transform:scale(1)}}
+@keyframes rip{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.7);opacity:0}}
+.tbox svg{width:auto;height:auto}
 </style>
 </head>
 <body>
@@ -185,7 +196,7 @@ button{cursor:pointer;border:0;background:none}
 <div class="toast" id="toast"></div>
 <section class="view" id="vOpen" hidden><h2>Open orders</h2><p class="vs">Today's unpaid orders. When a customer pays, tap how they paid.</p><div class="olist" id="openList"></div></section>
 <section class="view" id="vPays" hidden><h2>Payments today</h2><p class="vs">Every payment confirmed today: at the counter and through Paystack (pay QR and website).</p><div class="sum" id="paySum"></div><div id="payList"></div></section>
-<div class="tick" id="tick"><div class="tbox"><svg viewBox="0 0 120 120"><circle class="tc" cx="60" cy="60" r="54"/><path class="tp" d="M36 62 l16 16 l32 -34"/></svg><div class="tt">PAYMENT RECEIVED</div><div class="ta" id="tkAmt"></div><div class="td" id="tkDet"></div></div></div>
+<div class="tick" id="tick"><div class="tbox"><div class="tkw"><span class="rip"></span><span class="rip r2"></span><svg viewBox="0 0 120 120"><circle class="tickRing" cx="60" cy="60" r="54"/><circle class="tc" cx="60" cy="60" r="54"/><path class="tp" d="M36 62 l16 16 l32 -34"/></svg></div><div class="tt">PAYMENT RECEIVED</div><div class="ta" id="tkAmt"></div><div class="td" id="tkDet"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL = 'https://znxakuzpofjspahvdacf.supabase.co';
@@ -294,15 +305,21 @@ function showView(v){
   if (v === 'pays') { unseenPays = 0; renderPays(); }
 }
 document.querySelectorAll('.tab').forEach(t => t.onclick = () => showView(t.dataset.v));
-function tkChime(){ try { tkAudio = tkAudio || new (window.AudioContext||window.webkitAudioContext)(); const t = tkAudio.currentTime;
-  [[784,0],[1046,.15],[1318,.3]].forEach(([fq,d]) => { const o = tkAudio.createOscillator(), g = tkAudio.createGain(); o.frequency.value = fq; o.connect(g); g.connect(tkAudio.destination);
-  g.gain.setValueAtTime(.0001,t+d); g.gain.exponentialRampToValueAtTime(.35,t+d+.02); g.gain.exponentialRampToValueAtTime(.0001,t+d+.35); o.start(t+d); o.stop(t+d+.4); }); } catch(e){} }
+function tkChime(){ try { tkAudio = tkAudio || new (window.AudioContext||window.webkitAudioContext)(); tkAudio.resume(); const t = tkAudio.currentTime + .05;
+  /* bright "ka-ching" success sound: a quick sparkle then two bell tones */
+  const bell = (f, start, len, vol) => { [1, 2.01, 3.02].forEach((h, i) => { const o = tkAudio.createOscillator(), g = tkAudio.createGain();
+    o.type = 'sine'; o.frequency.value = f * h; o.connect(g); g.connect(tkAudio.destination);
+    g.gain.setValueAtTime(.0001, t + start); g.gain.exponentialRampToValueAtTime(vol / (i + 1), t + start + .01); g.gain.exponentialRampToValueAtTime(.0001, t + start + len);
+    o.start(t + start); o.stop(t + start + len + .05); }); };
+  [2637, 3136, 3520].forEach((f, i) => bell(f, i * .04, .12, .06));
+  bell(1318.5, .55, .9, .32); bell(1760, .78, 1.3, .3);
+} catch(e){} }
 function showTick(amount, method, who){
   const box = $('#tick .tbox'), clone = box.cloneNode(true); box.replaceWith(clone);
   $('#tkAmt').textContent = ced(+amount || 0);
   $('#tkDet').textContent = [MNAME[method] || method, who].filter(Boolean).join(' · ');
   $('#tick').classList.add('show'); tkChime();
-  clearTimeout(showTick.t); showTick.t = setTimeout(() => $('#tick').classList.remove('show'), 4000);
+  clearTimeout(showTick.t); showTick.t = setTimeout(() => $('#tick').classList.remove('show'), 4500);
 }
 $('#tick').onclick = () => $('#tick').classList.remove('show');
 async function loadToday(){
